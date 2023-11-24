@@ -1,4 +1,4 @@
-package com.example.sourceSafeMaven;
+package com.example.sourceSafeMaven.entities;
 
 import jakarta.persistence.*;
 
@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "`group`")
+@Table(name = "group")
 public class Group {
     @Id
-    @SequenceGenerator(name = "group_sequence", sequenceName = "group_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_sequence")
-    @Column(name = "id", updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @SequenceGenerator(name = "group_sequence", sequenceName = "group_sequence", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_sequence")
+//    @Column(name = "id", updatable = false)
     private Long id;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)

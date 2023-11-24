@@ -1,15 +1,17 @@
-package com.example.sourceSafeMaven;
+package com.example.sourceSafeMaven.entities;
 
 import jakarta.persistence.*;
 
 import java.util.Set;
 
 @Entity
+@Table(name = "user")
 public class User {
     @Id
-    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
-    @Column(name = "id", updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
+//    @Column(name = "id", updatable = false)
     private Long id;
 
     @ManyToMany()

@@ -1,4 +1,4 @@
-package com.example.sourceSafeMaven;
+package com.example.sourceSafeMaven.entities;
 
 
 import jakarta.persistence.*;
@@ -6,12 +6,13 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "`file`")
+@Table(name = "file")
 public class File {
     @Id
-    @SequenceGenerator(name = "file_sequence", sequenceName = "file_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "file_sequence")
-    @Column(name = "id", updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @SequenceGenerator(name = "file_sequence", sequenceName = "file_sequence", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "file_sequence")
+//    @Column(name = "id", updatable = false)
     private Long id;
 
     public List<Version> getVersions() {
