@@ -2,8 +2,14 @@ package com.example.sourceSafeMaven.entities;
 
 import com.example.sourceSafeMaven.entities.User;
 import jakarta.persistence.*;
-
-
+import lombok.Setter;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "version")
 public class Version {
@@ -27,43 +33,4 @@ public class Version {
     @Column(name = "file_content", columnDefinition = "BLOB")
     private byte[] fileContent;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
-    }
-
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public byte[] getFileContent() {
-        return fileContent;
-    }
-
-    public void setFileContent(byte[] fileContent) {
-        this.fileContent = fileContent;
-    }
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

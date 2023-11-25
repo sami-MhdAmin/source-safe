@@ -3,31 +3,34 @@ package com.example.sourceSafeMaven.controller;
 import com.example.sourceSafeMaven.entities.Group;
 import com.example.sourceSafeMaven.entities.User;
 import com.example.sourceSafeMaven.repository.UserRepository;
+import com.example.sourceSafeMaven.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/sourceSafe")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
+//    @GetMapping("/files")
+//    public ResponseEntity<List<Group>> getFiles() {
+//        List<Group> files = userService.getFiles();
+//        return ResponseEntity.ok(files);
+//    }
 
     @GetMapping("/files")
-    public Set<Group> getFiles() {
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + 1));
+    public ResponseEntity<User> getFiles() {
+        User groups = userService.getFiles();
 
-        return user.getGroups();
+            return ResponseEntity.ok(groups);
 
+        }
     }
-//    @GetMapping("/files")
-//    public String getFiles() {
-//        return  "devtools";
-//
-//    }
+
 }
