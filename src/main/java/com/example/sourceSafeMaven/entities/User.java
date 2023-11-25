@@ -1,9 +1,18 @@
 package com.example.sourceSafeMaven.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "user")
 public class User {
@@ -14,29 +23,28 @@ public class User {
 //    @Column(name = "id", updatable = false)
     private Long id;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(
-            name = "users_groups",
+            name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
-    private Set<Group> groups;
-    @OneToOne(mappedBy = "user")
+    private Set<Group> groups = new HashSet<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Version version;
 
-    public Set<Group> getGroups() {
-        return groups;
-    }
-
-    private String email;
-
-    public void setVersion(Version version) {
-        this.version = version;
-    }
-
+    @Column(nullable = false)
     private String password;
 
-    public Version getVersion() {
-        return version;
-    }
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, unique = true)
+    private String userName;
+
+    @OneToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
 }

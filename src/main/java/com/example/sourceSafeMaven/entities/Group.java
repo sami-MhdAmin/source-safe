@@ -1,13 +1,22 @@
 package com.example.sourceSafeMaven.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "group")
+@Table(name = "group_fixed")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,32 +29,32 @@ public class Group {
     private List<File> files = new ArrayList<>();
 
     @ManyToMany(mappedBy = "groups")
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
 
-    public Group() {}
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<File> getFiles() {
-        return files;
-    }
-    public void setFiles(List<File> files) {
-        this.files = files;
-    }
-    public void addFile(File file) {
-        files.add(file);
-        file.setGroup(this);
-    }
-
-    public void removeFile(File file) {
-        files.remove(file);
-        file.setGroup(null);
-    }
+//    public Group() {}
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+//
+//    public List<File> getFiles() {
+//        return files;
+//    }
+//    public void setFiles(List<File> files) {
+//        this.files = files;
+//    }
+//    public void addFile(File file) {
+//        files.add(file);
+//        file.setGroup(this);
+//    }
+//
+//    public void removeFile(File file) {
+//        files.remove(file);
+//        file.setGroup(null);
+//    }
 
 }
