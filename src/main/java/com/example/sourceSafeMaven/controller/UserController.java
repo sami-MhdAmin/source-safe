@@ -19,6 +19,6 @@ public class UserController {
 
     @GetMapping("/files")
     public Set<Group> getFiles() {
-
+        return null;
     }
 }
