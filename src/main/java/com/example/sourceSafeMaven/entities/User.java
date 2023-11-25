@@ -18,9 +18,6 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
-//    @Column(name = "id", updatable = false)
     private Long id;
 
     @ManyToMany

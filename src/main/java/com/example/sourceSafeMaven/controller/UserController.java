@@ -19,10 +19,6 @@ public class UserController {
 
     @GetMapping("/files")
     public Set<Group> getFiles() {
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + 1));
-
-        return user.getGroups();
 
     }
 }
