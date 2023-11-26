@@ -1,7 +1,11 @@
 package com.example.sourceSafeMaven.security.auth;
 
 import com.example.sourceSafeMaven.models.AuthenticationResponse;
+import com.example.sourceSafeMaven.security.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
 
     private final AuthenticationService authService;
 
@@ -26,7 +32,14 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ){
-        return ResponseEntity.ok(authService.authenticate(request));
+//        try {
+            AuthenticationResponse response = authService.authenticate(request);
+            return ResponseEntity.ok(response);
+//        } catch (UserNotFoundException e) {
+//            // Handle user not found exception
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body(new AuthenticationResponse(null, null,null, "User not found"));
+//        }
     }
 
 //    @Autowired
