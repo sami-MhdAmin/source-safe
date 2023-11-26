@@ -1,8 +1,15 @@
 package com.example.sourceSafeMaven.entities;
-
-import com.example.sourceSafeMaven.entities.User;
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
 @Table(name = "version")
