@@ -5,6 +5,7 @@ import com.example.sourceSafeMaven.entities.User;
 import com.example.sourceSafeMaven.models.AuthenticationResponse;
 import com.example.sourceSafeMaven.repository.UserRepository;
 import com.example.sourceSafeMaven.security.JwtService;
+import com.example.sourceSafeMaven.security.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,23 +31,41 @@ public class AuthenticationService{
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
+        return AuthenticationResponse.builder() // it return token with response
                 .token(jwtToken)
+//                .user(user)
+                .userEmail(user.getEmail())
+                .msg("User added successfully")
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws UserNotFoundException {
+        try {
+            System.out.println("i am in try");
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+
+            var user = userRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+            var jwtToken = jwtService.generateToken(user);
+
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .userEmail(user.getEmail())
+                    .msg("User added successfully")
+                    .build();
+        } catch (UserNotFoundException e){
+            System.out.println("i am in catch");
+
+            return AuthenticationResponse.builder()
+                    .errorMessage("User not found")
+                    .build();
+        }
+
     }
 }
