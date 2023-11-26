@@ -19,6 +19,25 @@ public class JwtService {
 
     private static final String SECRET_KEY = "97e74ee81f5206429721abf0cd87b2450299e2ba3be8feca9d85d3c2c18842e7";
 
+
+    public String getUserName(String token){ //when we will use this method? when we receive the token from the client when client makes a request to the server and through this token we get the user name
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getId();
+    }
+
+//    public String getId(String token){ //when we will use this method? when we receive the token from the client when client makes a request to the server and through this token we get the user name
+//        String claims = Jwts.parserBuilder()
+//                .setSigningKey(getSignInKey())
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody().getId();
+//        return claims;
+//    }
+
     public String extractUsername(String token) {
         //the subject should be my email or my username
         return extractClaim(token, Claims::getSubject);
@@ -73,4 +92,8 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+//    private Key key(){
+//        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecretKey));
+//    }
 }
