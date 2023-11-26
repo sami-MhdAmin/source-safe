@@ -24,7 +24,7 @@ public class Group {
     private Long id;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<File> files = new ArrayList<>();
+    private List<FileVersion> files = new ArrayList<>();
 
     @ManyToMany(mappedBy = "groups")
     private Set<User> users = new HashSet<>();

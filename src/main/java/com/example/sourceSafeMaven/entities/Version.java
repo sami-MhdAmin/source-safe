@@ -25,14 +25,19 @@ public class Version {
 
     @ManyToOne
     @JoinColumn(name = "file_id")
-    private File file;
+    private FileVersion file;
 
     @Column(name = "file_name")
     private String fileName;
 
-//    @Lob
-//    @Column(name = "file_content", columnDefinition = "BLOB")
-//    private byte[] fileContent;
 
+/*
+    Certainly! In JPA (Java Persistence API),
+     the @Lob (Large Object) annotation is used to indicate that the annotated field should be treated as a large object in the database.
+      The @Column annotation is used to specify details about the column in the database table.
+ */
+    @Lob
+    @Column(name = "file_content", columnDefinition = "BLOB") //BLOB Binary Large Object
+    private byte[] fileContent;
 
 }

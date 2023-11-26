@@ -14,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "fil")
-public class File {
+@Table(name = "file_version")
+public class FileVersion { //change name just to avoid the conflict with File on java
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
