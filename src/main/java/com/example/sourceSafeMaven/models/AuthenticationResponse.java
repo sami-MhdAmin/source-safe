@@ -17,4 +17,7 @@ public class AuthenticationResponse {
     private String msg;
     private String errorMessage;  // Add this field
 
+    public AuthenticationResponse(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 }

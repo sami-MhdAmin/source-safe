@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,14 +33,17 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ){
-//        try {
+        try {
             AuthenticationResponse response = authService.authenticate(request);
+            System.out.println("in try controller");
             return ResponseEntity.ok(response);
-//        } catch (UserNotFoundException e) {
-//            // Handle user not found exception
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(new AuthenticationResponse(null, null,null, "User not found"));
-//        }
+        } catch (BadCredentialsException e) {
+            System.out.println("in catch controller");
+
+            // Handle user not found exception
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new AuthenticationResponse("User not found"));
+        }
     }
 
 //    @Autowired

@@ -9,6 +9,7 @@ import com.example.sourceSafeMaven.security.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,8 @@ public class AuthenticationService{
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) throws UserNotFoundException {
-        try {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws BadCredentialsException {
+//        try {
             System.out.println("i am in try");
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -48,9 +49,11 @@ public class AuthenticationService{
                             request.getPassword()
                     )
             );
+            System.out.println("i am in try2");
 
             var user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new UserNotFoundException("User not found"));
+            System.out.println("i am in try3");
 
             var jwtToken = jwtService.generateToken(user);
 
@@ -59,13 +62,11 @@ public class AuthenticationService{
                     .userEmail(user.getEmail())
                     .msg("User added successfully")
                     .build();
-        } catch (UserNotFoundException e){
-            System.out.println("i am in catch");
-
-            return AuthenticationResponse.builder()
-                    .errorMessage("User not found")
-                    .build();
-        }
-
+//        } catch (BadCredentialsException e){
+//            System.out.println("i am in catch");
+//            return AuthenticationResponse.builder()
+//                    .errorMessage("User not found")
+//                    .build();
+//        }
     }
 }
