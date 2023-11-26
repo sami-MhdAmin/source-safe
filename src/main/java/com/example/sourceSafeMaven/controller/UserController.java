@@ -1,13 +1,13 @@
 package com.example.sourceSafeMaven.controller;
 
-import com.example.sourceSafeMaven.entities.Group;
 import com.example.sourceSafeMaven.entities.User;
-import com.example.sourceSafeMaven.repository.UserRepository;
+import com.example.sourceSafeMaven.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -15,10 +15,18 @@ import java.util.Set;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
-    @GetMapping("/files")
-    public Set<Group> getFiles() {
+    @PostMapping("addFile/{groupId}")
+    public ResponseEntity<String> addFile(@PathVariable("groupId") Long groupId)
+    {
+        Long userId= Long.valueOf(1);
+        userService.addFile(groupId,userId);
+        return new ResponseEntity<>("file added successfully", HttpStatus.OK);
+    }
 
+    @GetMapping("/files/{userId}")
+    public Optional<User> getFiles(@PathVariable("userId") Long Id) {
+        return userService.getFiles(Id);
     }
 }

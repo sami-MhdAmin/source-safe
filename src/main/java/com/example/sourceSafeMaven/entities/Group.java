@@ -7,6 +7,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "group_fixed")
 public class Group {
@@ -20,3 +29,4 @@ public class Group {
     @ManyToMany(mappedBy = "groups")
     private Set<User> users = new HashSet<>();
 }
+
