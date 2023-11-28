@@ -1,12 +1,14 @@
 package com.example.sourceSafeMaven.security;
 
 import com.example.sourceSafeMaven.entities.User;
+import com.example.sourceSafeMaven.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -22,6 +25,8 @@ public class JwtService {
 
     private static final String SECRET_KEY = "97e74ee81f5206429721abf0cd87b2450299e2ba3be8feca9d85d3c2c18842e7";
 
+    @Autowired
+    private UserRepository userRepository;
 
     public String getUserName(String token){ //when we will use this method? when we receive the token from the client when client makes a request to the server and through this token we get the user name
         Claims claims = Jwts.parserBuilder()
@@ -67,13 +72,16 @@ public class JwtService {
     }
 
 
-    public String getUserIdByToken(HttpHeaders headers){
+    public Long getUserIdByToken(HttpHeaders headers){
         String token = headers.get("Authorization").get(0);
         String jwt = token.replace("Bearer", "");
-        String userId = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwt)
+        String userEmail = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwt)
                 .getBody()
                 .getSubject()
                 ;
+        Optional<User> user = userRepository.findByEmail(userEmail);
+        Long userId = user.get().getId();
+        System.out.println(user.get().getId());
 //        System.out.println("hereee" + userId);
         return userId;
     }

@@ -39,34 +39,34 @@ public class UserController {
         return userService.getFiles(userId);
     }
 
-    @GetMapping("/user")
-    public User getUserFromToken(@RequestHeader("Authorization") String token) {
-        // Assuming the Authorization header contains a Bearer token
-        String jwtToken = token.replace("Bearer ", "");
-        return jwtService.extractUser(jwtToken);
-    }
-
-    @GetMapping("/user/id")
-    public String getUserIdFromToken(@RequestHeader("Authorization") String token) {
-        System.out.println("hi I am sami1");
-        // Assuming the Authorization header contains a Bearer token
-        System.out.println(token);
-        String jwtToken = token.replace("Bearer ", "");
-        System.out.println("hi I am sami2");
-        System.out.println(jwtToken);
-        String userId = jwtService.extractUserId(jwtToken);
-        System.out.println("hi I am sami3");
-
-        System.out.println(userId);
-        return userId;
-    }
-
     @GetMapping("/getToken")
-    public ResponseEntity<String> getToken(@RequestHeader HttpHeaders headers){
-        String userId = jwtService.getUserIdByToken(headers);
-        Optional<User> user = userRepository.findByEmail(userId);
-        System.out.println(user.get().getId());
+    public ResponseEntity<Long> getToken(@RequestHeader HttpHeaders headers){
+        Long userId = jwtService.getUserIdByToken(headers);
         System.out.println(userId);
         return ResponseEntity.status(HttpStatus.OK).body(userId);
     }
+
+//    @GetMapping("/user")
+//    public User getUserFromToken(@RequestHeader("Authorization") String token) {
+//        // Assuming the Authorization header contains a Bearer token
+//        String jwtToken = token.replace("Bearer ", "");
+//        return jwtService.extractUser(jwtToken);
+//    }
+
+//    @GetMapping("/user/id")
+//    public String getUserIdFromToken(@RequestHeader("Authorization") String token) {
+//        System.out.println("hi I am sami1");
+//        // Assuming the Authorization header contains a Bearer token
+//        System.out.println(token);
+//        String jwtToken = token.replace("Bearer ", "");
+//        System.out.println("hi I am sami2");
+//        System.out.println(jwtToken);
+//        String userId = jwtService.extractUserId(jwtToken);
+//        System.out.println("hi I am sami3");
+//
+//        System.out.println(userId);
+//        return userId;
+//    }
+
+
 }
