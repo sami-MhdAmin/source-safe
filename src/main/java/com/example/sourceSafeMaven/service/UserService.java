@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +24,15 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private VersionRepository versionRepository;
 
     @Autowired
     private GroupRepository groupRepository;
 
     @Autowired
     private FileRepository fileRepository;
+
+    @Autowired
+    private VersionRepository versionRepository;
 
     public ResponseEntity<String> addFile(Long userId, MultipartFile file, Long groupId, String fileName) {
         try {
@@ -90,4 +93,5 @@ public class UserService {
     public List<Group> getFiles() {
         return groupRepository.findAll();
     }
+
 }
