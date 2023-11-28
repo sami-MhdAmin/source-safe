@@ -1,10 +1,13 @@
 package com.example.sourceSafeMaven.security;
 
+import com.example.sourceSafeMaven.entities.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +40,44 @@ public class JwtService {
 //                .getBody().getId();
 //        return claims;
 //    }
+
+    //sami test start
+    // Extracts the user ID from the JWT
+    public String extractUserId(String token) {
+        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+        Claims claims = claimsJws.getBody();
+
+        // Assuming your user ID is stored in a claim named "userId"
+        return claims.get("id", String.class);
+    }
+
+    // Extracts the User object from the JWT
+    public User extractUser(String token) {
+        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+        Claims claims = claimsJws.getBody();
+
+        // Assuming your user ID is stored in a claim named "userId"
+        String userId = claims.get("userId", String.class);
+
+        // Create a User object using the extracted user ID
+        User user = new User();
+        user.setId(Long.parseLong(userId)); // Assuming the user ID is a Long
+
+        return user;
+    }
+
+
+    public String getUserIdByToken(HttpHeaders headers){
+        String token = headers.get("Authorization").get(0);
+        String jwt = token.replace("Bearer", "");
+        String userId = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwt)
+                .getBody()
+                .getSubject()
+                ;
+//        System.out.println("hereee" + userId);
+        return userId;
+    }
+    //sami test end
 
     public String extractUsername(String token) {
         //the subject should be my email or my username

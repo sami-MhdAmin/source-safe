@@ -22,28 +22,27 @@ public class UserService {
     private UserRepository userRepository;
     private GroupRepository groupRepository;
 
-    public ResponseEntity<String> addFile(Long groupId, Long userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        Optional<Group> groupOpt = groupRepository.findById(groupId);
-        if (userOpt.isPresent() && groupOpt.isPresent()) {
-            User user = userOpt.get();
-            Group group = groupOpt.get();
-            boolean isUserInGroup = user.getGroups().contains(group);
-            if (isUserInGroup) {
-                FileVersion fileVersion=new FileVersion();
-                fileVersion.setGroup(group);
-                Version version=new Version();
-                version.setUser(user);
-                version.setFile(fileVersion);
-                version.setFileContent();
-
-            } else {
-                return new ResponseEntity<>("you are not member in this group", HttpStatus.BAD_REQUEST);
-            }
-        }
-        return new ResponseEntity<>("!", HttpStatus.BAD_REQUEST);
-
-    }
+//    public ResponseEntity<String> addFile(Long groupId, Long userId) {
+//        Optional<User> userOpt = userRepository.findById(userId);
+//        Optional<Group> groupOpt = groupRepository.findById(groupId);
+//        if (userOpt.isPresent() && groupOpt.isPresent()) {
+//            User user = userOpt.get();
+//            Group group = groupOpt.get();
+//            boolean isUserInGroup = user.getGroups().contains(group);
+//            if (isUserInGroup) {
+//                FileVersion fileVersion=new FileVersion();
+//                fileVersion.setGroup(group);
+//                Version version=new Version();
+//                version.setUser(user);
+//                version.setFile(fileVersion);
+//                version.setFileContent();
+//
+//            } else {
+//                return new ResponseEntity<>("you are not member in this group", HttpStatus.BAD_REQUEST);
+//            }
+//        }
+//        return new ResponseEntity<>("!", HttpStatus.BAD_REQUEST);
+//    }
 
     public List<FileVersion> getFiles(Long userId) {
         Optional<User> userOpt = userRepository.findById(userId);
