@@ -20,6 +20,8 @@ public class FileVersion { //change name just to avoid the conflict with File on
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "file_name")
+    private String fileName;
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
