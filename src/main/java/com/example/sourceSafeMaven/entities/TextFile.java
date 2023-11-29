@@ -32,6 +32,10 @@ public class TextFile { //change name just to avoid the conflict with File on ja
     @JsonIgnore
     private List<Version> versions;
 
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus reservationStatus;
+
+    private Long reservedByUserId;
 
 }
 

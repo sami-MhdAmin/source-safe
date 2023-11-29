@@ -37,4 +37,5 @@ public class Version {
  */
     @Column(name = "file_content", columnDefinition = "BLOB")
     private byte[] fileContent;
+
 }
