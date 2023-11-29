@@ -1,5 +1,5 @@
 package com.example.sourceSafeMaven.entities;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,7 +7,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,14 +24,12 @@ public class User implements UserDetails {
     private Long id;
 
     @ManyToMany
-    @JoinTable(
-            name = "user_group",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id")
-    )
-    private List<Group> groups;
+    @JsonIgnore
+    private Set<Group> groups;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Version> versions;
     @Column(nullable = false)
     private String password;
@@ -79,5 +76,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void addGroup(Group group) {
+        groups.add(group);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.sourceSafeMaven.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "file_version")
-public class FileVersion { //change name just to avoid the conflict with File on java
+public class TextFile { //change name just to avoid the conflict with File on java
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,9 +25,13 @@ public class FileVersion { //change name just to avoid the conflict with File on
     private String fileName;
     @ManyToOne
     @JoinColumn(name = "group_id")
+    @JsonIgnore
     private Group group;
 
-    @OneToMany(mappedBy = "file", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "file")
+    @JsonIgnore
     private List<Version> versions;
+
+
 }
 

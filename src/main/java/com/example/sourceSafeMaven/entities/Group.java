@@ -1,9 +1,9 @@
 package com.example.sourceSafeMaven.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,10 +23,13 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FileVersion> files = new ArrayList<>();
+    @OneToMany(mappedBy = "group")
+    @JsonIgnore
+    private List<TextFile> files = new ArrayList<>();
 
     @ManyToMany(mappedBy = "groups")
-    private Set<User> users = new HashSet<>();
+    @JsonIgnore
+    private Set<User> users;
+
 }
 

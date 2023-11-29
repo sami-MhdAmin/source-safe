@@ -22,7 +22,7 @@ public class Version {
 
     @ManyToOne
     @JoinColumn(name = "file_id")
-    private FileVersion file;
+    private TextFile file;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

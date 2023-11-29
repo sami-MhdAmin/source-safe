@@ -1,8 +1,9 @@
 package com.example.sourceSafeMaven.controller;
 
 import com.example.sourceSafeMaven.dto.AddFileDto;
-import com.example.sourceSafeMaven.entities.FileVersion;
 import com.example.sourceSafeMaven.entities.Group;
+import com.example.sourceSafeMaven.entities.TextFile;
+import com.example.sourceSafeMaven.entities.Version;
 import com.example.sourceSafeMaven.security.JwtService;
 import com.example.sourceSafeMaven.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/sourceSafe")
@@ -23,23 +26,22 @@ public class UserController {
     private JwtService jwtService;
 
     @PostMapping("/addFile")
-    public ResponseEntity<String> addFile(@ModelAttribute AddFileDto request) {
+    public ResponseEntity<String> addFile(@ModelAttribute AddFileDto request,@RequestHeader HttpHeaders httpHeaders) {
         if (!request.getFile().isEmpty()) {
-            return userService.addFile(1L, request.getFile(), request.getGroupId(), request.getFileName());
+            Long userId=jwtService.getUserIdByToken(httpHeaders);
+            return userService.addFile(userId, request.getFile(), request.getGroupId(), request.getFileName());
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
         }
     }
 
     @GetMapping("/files")
-    public List<Group> getFiles() {
-        return userService.getFiles();
+    public Map<Long, Map<TextFile, byte[]>>getFiles(@RequestHeader HttpHeaders httpHeaders) {
+        Long userId=jwtService.getUserIdByToken(httpHeaders);
+        Map<Long, Map<TextFile, byte[]>> groups =  userService.getFiles(userId);
+        return groups;
     }
 
-    @GetMapping("/filess")
-    public String testString() {
-        return "go to hell";
-    }
 
     @GetMapping("/getToken")
     public ResponseEntity<Long> getToken(@RequestHeader HttpHeaders headers) {
@@ -47,6 +49,9 @@ public class UserController {
         System.out.println(userId);
         return ResponseEntity.status(HttpStatus.OK).body(userId);
     }
+
+
+
 
 //    @GetMapping("/user")
 //    public User getUserFromToken(@RequestHeader("Authorization") String token) {

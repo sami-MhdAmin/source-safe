@@ -1,29 +1,20 @@
 package com.example.sourceSafeMaven.service;
 
-import com.example.sourceSafeMaven.entities.FileVersion;
-import com.example.sourceSafeMaven.entities.Group;
-import com.example.sourceSafeMaven.entities.User;
-import com.example.sourceSafeMaven.entities.Version;
-import com.example.sourceSafeMaven.repository.FileRepository;
-import com.example.sourceSafeMaven.repository.GroupRepository;
-import com.example.sourceSafeMaven.repository.UserRepository;
-import com.example.sourceSafeMaven.repository.VersionRepository;
+import com.example.sourceSafeMaven.entities.*;
+import com.example.sourceSafeMaven.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
 
     @Autowired
     private GroupRepository groupRepository;
@@ -46,13 +37,14 @@ public class UserService {
 
                 Optional<Group> groupOptional = groupRepository.findById(groupId);
                 Group group = groupOptional.orElse(null);
-
-                FileVersion fileVersion = new FileVersion();
+                //create file
+                TextFile fileVersion = new TextFile();
                 fileVersion.setGroup(group);
                 fileVersion.setFileName(fileName);
                 fileRepository.save(fileVersion);
 
                 version.setFile(fileVersion);
+
                 versionRepository.save(version);
                 return ResponseEntity.ok("File uploaded successfully");
             } else {
@@ -63,35 +55,49 @@ public class UserService {
         }
     }
 
-//    public List<FileVersion> getFiles(Long userId) {
-//        Optional<User> userOpt = userRepository.findById(userId);
-//        if (userOpt.isPresent()) {
-//            User user = userOpt.get();
-//            Collections response = (Collections) user.getGroups();
-//            List<Group> groups = (List<Group>) user.getGroups();
-//            List<FileVersion> filesWithVersions = new ArrayList<>();
-//
-//            for (Group group : groups) {
-//                List<FileVersion> files = group.getFiles();
-//                for (FileVersion file : files) {
-//                    List<Version> versions = file.getVersions();
-//                    if (!versions.isEmpty()) {
-//                        FileVersion fileWithVersions = new FileVersion();
-//                        fileWithVersions.setVersions(versions);
-//                        filesWithVersions.add(fileWithVersions);
-//                    }
-//                }
-//            }
-//
-//            return filesWithVersions;
-//        }
-//
-//        return null;
-//    }
-//
+    /*public Set<TextFile> getFiles(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        Set<Group> groups = user.getGroups();
+        Set<TextFile> filesWithVersions = new HashSet<>();
 
-    public List<Group> getFiles() {
-        return groupRepository.findAll();
+        for (Group group : groups) {
+            List<TextFile> files = group.getFiles();
+            for (TextFile file : files) {
+
+                List<Version> versions = file.getVersions();
+                if (!versions.isEmpty()) {
+                    Version lastVersion = versions.get(versions.size() - 1);
+//                    versions.clear();
+                    versions.add(lastVersion);
+
+                    filesWithVersions.add(file);
+                }
+            }
+        }
+        return filesWithVersions;
+    }*/
+
+    public Map<Long, Map<TextFile, byte[]>> getFiles(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        Set<Group> groups = user.getGroups();
+        Map<Long, Map<TextFile, byte[]>> filesByGroup = new HashMap<>();
+
+        for (Group group : groups) {
+            List<TextFile> files = group.getFiles();
+            Map<TextFile, byte[]> filesWithLastVersion = new HashMap<>();
+
+            for (TextFile file : files) {
+                List<Version> versions = file.getVersions();
+                if (!versions.isEmpty()) {
+                    Version lastVersion = versions.get(versions.size() - 1);
+                    filesWithLastVersion.put(file, lastVersion.getFileContent());
+                }
+            }
+
+            filesByGroup.put(group.getId(), filesWithLastVersion);
+        }
+
+        return filesByGroup;
     }
 
 }
