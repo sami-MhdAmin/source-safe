@@ -1,9 +1,6 @@
 package com.example.sourceSafeMaven.controller;
 
 import com.example.sourceSafeMaven.dto.AddFileDto;
-import com.example.sourceSafeMaven.entities.Group;
-import com.example.sourceSafeMaven.entities.TextFile;
-import com.example.sourceSafeMaven.entities.Version;
 import com.example.sourceSafeMaven.security.JwtService;
 import com.example.sourceSafeMaven.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/sourceSafe")
@@ -36,9 +31,9 @@ public class UserController {
     }
 
     @GetMapping("/files")
-    public Map<Long, Map<TextFile, byte[]>>getFiles(@RequestHeader HttpHeaders httpHeaders) {
+    public Map<String, Object> getFiles(@RequestHeader HttpHeaders httpHeaders) {
         Long userId=jwtService.getUserIdByToken(httpHeaders);
-        Map<Long, Map<TextFile, byte[]>> groups =  userService.getFiles(userId);
+        Map<String, Object> groups =  userService.getFiles(userId);
         return groups;
     }
 

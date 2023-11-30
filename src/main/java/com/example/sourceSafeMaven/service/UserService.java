@@ -55,49 +55,40 @@ public class UserService {
         }
     }
 
-    /*public Set<TextFile> getFiles(Long userId) {
+    public Map<String, Object> getFiles(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
         Set<Group> groups = user.getGroups();
-        Set<TextFile> filesWithVersions = new HashSet<>();
+        Map<String, Object> response = new HashMap<>();
+        List<Map<String, Object>> groupList = new ArrayList<>();
 
         for (Group group : groups) {
+            Map<String, Object> groupData = new HashMap<>();
+            groupData.put("id", group.getId());
+
+            List<Map<String, Object>> fileList = new ArrayList<>();
             List<TextFile> files = group.getFiles();
-            for (TextFile file : files) {
-
-                List<Version> versions = file.getVersions();
-                if (!versions.isEmpty()) {
-                    Version lastVersion = versions.get(versions.size() - 1);
-//                    versions.clear();
-                    versions.add(lastVersion);
-
-                    filesWithVersions.add(file);
-                }
-            }
-        }
-        return filesWithVersions;
-    }*/
-
-    public Map<Long, Map<TextFile, byte[]>> getFiles(Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        Set<Group> groups = user.getGroups();
-        Map<Long, Map<TextFile, byte[]>> filesByGroup = new HashMap<>();
-
-        for (Group group : groups) {
-            List<TextFile> files = group.getFiles();
-            Map<TextFile, byte[]> filesWithLastVersion = new HashMap<>();
 
             for (TextFile file : files) {
                 List<Version> versions = file.getVersions();
                 if (!versions.isEmpty()) {
                     Version lastVersion = versions.get(versions.size() - 1);
-                    filesWithLastVersion.put(file, lastVersion.getFileContent());
+                    Map<String, Object> fileData = new HashMap<>();
+
+                    byte[] fileContent = lastVersion.getFileContent();
+                    String content = new String(fileContent);
+
+                    fileData.put("fileName", file.getFileName());
+                    fileData.put("lastVersion", content);
+                    fileList.add(fileData);
                 }
             }
 
-            filesByGroup.put(group.getId(), filesWithLastVersion);
+            groupData.put("files", fileList);
+            groupList.add(groupData);
         }
 
-        return filesByGroup;
+        response.put("groups", groupList);
+        return response;
     }
 
 }
