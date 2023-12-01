@@ -33,4 +33,11 @@ public class GroupController {
         var fileResponseList = files.stream().map(file -> new FileResponse(file)).toList();
         return fileResponseList;
     }
+
+    @GetMapping("/v2/{groupId}")
+    public List<FileResponse> getFilesV2(@RequestHeader HttpHeaders httpHeaders, @PathVariable Long groupId) {
+        var group = groupService.getGroup(groupId);
+        var fileResponseList = group.getFiles().stream().map(file -> new FileResponse(file)).toList();
+        return fileResponseList;
+    }
 }

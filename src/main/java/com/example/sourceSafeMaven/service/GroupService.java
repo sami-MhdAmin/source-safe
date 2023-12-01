@@ -13,6 +13,10 @@ public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
 
+    public Group getGroup(Long id) {
+        return groupRepository.findById(id).orElse(null);
+    }
+
     public List<Group> getGroups() {
         return groupRepository.findAll();
     }
