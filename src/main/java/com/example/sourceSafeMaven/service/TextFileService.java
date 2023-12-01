@@ -1,19 +1,22 @@
 package com.example.sourceSafeMaven.service;
 
-import com.example.sourceSafeMaven.entities.ReservationStatus;
-import com.example.sourceSafeMaven.entities.TextFile;
-import com.example.sourceSafeMaven.repository.FileRepository;
+import com.example.sourceSafeMaven.entities.*;
+import com.example.sourceSafeMaven.repository.TextFileRepository;
+import com.example.sourceSafeMaven.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TextFileService {
 
     @Autowired
-    private FileRepository fileRepository;
+    private TextFileRepository fileRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
     //When a user checks out a file, update the reservation status to RESERVED
     public void checkOutFile(Long fileId, Long userId) throws FileNotFoundException {
@@ -63,6 +66,44 @@ public class TextFileService {
 //            throw new FileNotReservedByUserException("File is not reserved by the current user");
         }
     }
+
+
+    public Map<String, Object> getFiles(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        Set<Group> groups = user.getGroups();
+        Map<String, Object> response = new HashMap<>();
+        List<Map<String, Object>> groupList = new ArrayList<>();
+
+        for (Group group : groups) {
+            Map<String, Object> groupData = new HashMap<>();
+            groupData.put("id", group.getId());
+
+            List<Map<String, Object>> fileList = new ArrayList<>();
+            List<TextFile> files = group.getFiles();
+
+            for (TextFile file : files) {
+                List<Version> versions = file.getVersions();
+                if (!versions.isEmpty()) {
+                    Version lastVersion = versions.get(versions.size() - 1);
+                    Map<String, Object> fileData = new HashMap<>();
+
+                    byte[] fileContent = lastVersion.getFileContent();
+                    String content = new String(fileContent);
+
+                    fileData.put("fileName", file.getFileName());
+                    fileData.put("lastVersion", content);
+                    fileList.add(fileData);
+                }
+            }
+
+            groupData.put("files", fileList);
+            groupList.add(groupData);
+        }
+
+        response.put("groups", groupList);
+        return response;
+    }
+
 
 
 }

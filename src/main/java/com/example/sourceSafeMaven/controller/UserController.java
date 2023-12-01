@@ -2,7 +2,9 @@ package com.example.sourceSafeMaven.controller;
 
 import com.example.sourceSafeMaven.dto.AddFileDto;
 import com.example.sourceSafeMaven.security.JwtService;
+import com.example.sourceSafeMaven.service.TextFileService;
 import com.example.sourceSafeMaven.service.UserService;
+import com.example.sourceSafeMaven.service.VersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,13 +20,17 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
+    private VersionService versionService;
+    @Autowired
+    private TextFileService textFileService;
+    @Autowired
     private JwtService jwtService;
 
     @PostMapping("/addFile")
     public ResponseEntity<String> addFile(@ModelAttribute AddFileDto request,@RequestHeader HttpHeaders httpHeaders) {
         if (!request.getFile().isEmpty()) {
             Long userId=jwtService.getUserIdByToken(httpHeaders);
-            return userService.addFile(userId, request.getFile(), request.getGroupId(), request.getFileName());
+            return versionService.addFile(userId, request.getFile(), request.getGroupId(), request.getFileName());
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
         }
@@ -33,7 +39,7 @@ public class UserController {
     @GetMapping("/files")
     public Map<String, Object> getFiles(@RequestHeader HttpHeaders httpHeaders) {
         Long userId=jwtService.getUserIdByToken(httpHeaders);
-        Map<String, Object> groups =  userService.getFiles(userId);
+        Map<String, Object> groups =  textFileService.getFiles(userId);
         return groups;
     }
 
@@ -44,7 +50,6 @@ public class UserController {
         System.out.println(userId);
         return ResponseEntity.status(HttpStatus.OK).body(userId);
     }
-
 
 
 
