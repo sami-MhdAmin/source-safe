@@ -23,6 +23,9 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @OneToMany(mappedBy = "group")
     @JsonIgnore
     private List<TextFile> files = new ArrayList<>();

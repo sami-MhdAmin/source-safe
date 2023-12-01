@@ -106,5 +106,8 @@ public class TextFileService {
         return response;
     }
 
+    public List<TextFile> getFilesByGroupId(Long groupId) {
+        return fileRepository.findAllByGroupId(groupId);
+    }
 
 }

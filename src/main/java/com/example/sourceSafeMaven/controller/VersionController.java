@@ -31,7 +31,9 @@ public class VersionController {
     @Autowired
     private TextFileRepository textFileRepository;
 
-    @PostMapping("/addFile")
+    @PostMapping(
+            path = "/addFile",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> addFile(@ModelAttribute AddFileDto request, @RequestHeader HttpHeaders httpHeaders) {
         if (!request.getFile().isEmpty()) {
             Long userId=jwtService.getUserIdByToken(httpHeaders);
