@@ -18,8 +18,10 @@ public class TextFileService {
     private UserRepository userRepository;
 
 
-    //When a user checks out a file, update the reservation status to RESERVED
-    public void checkOutFile(Long fileId, Long userId) throws FileNotFoundException {
+
+
+    //When a user checks In a file, update the reservation status to RESERVED
+    public void checkInFile(Long fileId, Long userId) throws FileNotFoundException {
         // Fetch the file from the database
         TextFile file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
 
@@ -39,8 +41,8 @@ public class TextFileService {
         }
     }
 
-    //When a user checks in a file, update the reservation status to FREE
-    public void checkInFile(Long fileId,Long loggedInUserId) throws FileNotFoundException {
+    //When a user checks out a file, update the reservation status to FREE
+    public void checkOutFile(Long fileId,Long loggedInUserId) throws FileNotFoundException {
         // Fetch the file from the database
         TextFile file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
 
@@ -103,7 +105,6 @@ public class TextFileService {
         response.put("groups", groupList);
         return response;
     }
-
 
 
 }

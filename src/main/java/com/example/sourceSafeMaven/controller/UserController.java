@@ -14,35 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/sourceSafe")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
     @Autowired
-    private VersionService versionService;
-    @Autowired
-    private TextFileService textFileService;
-    @Autowired
     private JwtService jwtService;
-
-    @PostMapping("/addFile")
-    public ResponseEntity<String> addFile(@ModelAttribute AddFileDto request,@RequestHeader HttpHeaders httpHeaders) {
-        if (!request.getFile().isEmpty()) {
-            Long userId=jwtService.getUserIdByToken(httpHeaders);
-            return versionService.addFile(userId, request.getFile(), request.getGroupId(), request.getFileName());
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
-        }
-    }
-
-    @GetMapping("/files")
-    public Map<String, Object> getFiles(@RequestHeader HttpHeaders httpHeaders) {
-        Long userId=jwtService.getUserIdByToken(httpHeaders);
-        Map<String, Object> groups =  textFileService.getFiles(userId);
-        return groups;
-    }
-
 
     @GetMapping("/getToken")
     public ResponseEntity<Long> getToken(@RequestHeader HttpHeaders headers) {
