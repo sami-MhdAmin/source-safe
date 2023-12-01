@@ -29,7 +29,6 @@ public class Version {
     private User user;
 
 
-
 /*
     Certainly! In JPA (Java Persistence API),
      the @Lob (Large Object) annotation is used to indicate that the annotated field should be treated as a large object in the database.

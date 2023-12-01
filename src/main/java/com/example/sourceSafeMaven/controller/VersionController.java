@@ -31,6 +31,7 @@ public class VersionController {
     @Autowired
     private TextFileRepository textFileRepository;
 
+
     @PostMapping("/addFile")
     public ResponseEntity<String> addFile(@ModelAttribute AddFileDto request, @RequestHeader HttpHeaders httpHeaders) {
         if (!request.getFile().isEmpty()) {
@@ -53,14 +54,18 @@ public class VersionController {
                                                @PathVariable Long versionId,
                                                @RequestHeader HttpHeaders httpHeaders)
                 throws FileNotFoundException {
-//        Long userId=jwtService.getUserIdByToken(httpHeaders);
-            System.out.println("i am sami");
+
+        Long userId=jwtService.getUserIdByToken(httpHeaders);
+
+        textFileService.checkInFile(fileId,userId);
 
         byte[] versionBytes = versionService.getVersionBytes(versionId);
+
         Optional<TextFile> textFile = textFileRepository.findById(fileId);
         String fileName = textFile.get().getFileName();
-        fileName.concat(".txt");
-            System.out.println("file name is " + fileName);
+//        fileName.concat(".txt");
+//            System.out.println("file name is " + fileName);
+
         // Set up the HttpHeaders
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);

@@ -58,9 +58,13 @@ public class VersionService {
         }
     }
 
+
     public byte[] getVersionBytes(Long versionId) throws FileNotFoundException {
-        Version version = versionRepository.findById(versionId).orElseThrow(() -> new FileNotFoundException("File not found"));
-        return version.getFileContent();
+        Version versionx = versionRepository.findById(versionId)
+                .orElseThrow(() -> new FileNotFoundException("File not found"));
+
+        byte[] version = versionx.getFileContent();
+        return version;
     }
 
 

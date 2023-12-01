@@ -1,6 +1,8 @@
 package com.example.sourceSafeMaven.service;
 
 import com.example.sourceSafeMaven.entities.*;
+import com.example.sourceSafeMaven.models.FileAlreadyReservedException;
+import com.example.sourceSafeMaven.models.FileNotReservedByUserException;
 import com.example.sourceSafeMaven.repository.TextFileRepository;
 import com.example.sourceSafeMaven.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,6 @@ public class TextFileService {
     private TextFileRepository fileRepository;
     @Autowired
     private UserRepository userRepository;
-
-
 
 
     //When a user checks In a file, update the reservation status to RESERVED
@@ -37,7 +37,7 @@ public class TextFileService {
             fileRepository.save(file);
         } else {
             // Handle case where the file is already reserved
-//            throw new FileAlreadyReservedException("File is already reserved by another user");
+            throw new FileAlreadyReservedException("File is already reserved by another user");
         }
     }
 
@@ -65,7 +65,7 @@ public class TextFileService {
             fileRepository.save(file);
         } else {
             // Handle case where the file is not reserved by the user
-//            throw new FileNotReservedByUserException("File is not reserved by the current user");
+            throw new FileNotReservedByUserException("File is not reserved by the current user");
         }
     }
 
