@@ -49,7 +49,10 @@ public class VersionController {
     }
 
         @GetMapping("/download/{fileId}/{versionId}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId, @PathVariable Long versionId, @RequestHeader HttpHeaders httpHeaders) throws FileNotFoundException {
+    public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId,
+                                               @PathVariable Long versionId,
+                                               @RequestHeader HttpHeaders httpHeaders)
+                throws FileNotFoundException {
 //        Long userId=jwtService.getUserIdByToken(httpHeaders);
             System.out.println("i am sami");
 
