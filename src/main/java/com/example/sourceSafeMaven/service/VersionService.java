@@ -48,7 +48,7 @@ public class VersionService {
 
                 version.setFile(fileVersion);
 
-                versionRepository.save(version);
+                   versionRepository.save(version);
                 return ResponseEntity.ok("File uploaded successfully");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user is not in the group");
@@ -57,4 +57,11 @@ public class VersionService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
         }
     }
+
+    public byte[] getVersionBytes(Long versionId) throws FileNotFoundException {
+        Version version = versionRepository.findById(versionId).orElseThrow(() -> new FileNotFoundException("File not found"));
+        return version.getFileContent();
+    }
+
+
 }
