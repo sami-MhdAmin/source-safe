@@ -12,4 +12,19 @@ import java.util.*;
 
 @Service
 public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public List<User> findUsersByIds(List<Long> ids) {
+        return userRepository.findUsersByIdIn(ids);
+    }
 }

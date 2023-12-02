@@ -1,6 +1,5 @@
 package com.example.sourceSafeMaven.dto.file;
 
-import com.example.sourceSafeMaven.dto.group.GroupResponse;
 import com.example.sourceSafeMaven.entities.ReservationStatus;
 import com.example.sourceSafeMaven.entities.TextFile;
 import lombok.Getter;
@@ -17,13 +16,10 @@ public class FileResponse {
 
     private Long userId; // TODO: this should be user object
 
-    private GroupResponse group;
-
     public FileResponse(TextFile textFile) {
         this.id = textFile.getId();
         this.name = textFile.getFileName();
         this.reservationStatus = textFile.getReservationStatus();
         this.userId = textFile.getReservedByUserId();
-        this.group = new GroupResponse(textFile.getGroup());
     }
 }

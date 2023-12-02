@@ -30,8 +30,12 @@ public class Group {
     @JsonIgnore
     private List<TextFile> files = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "groups")
-    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "group_user",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )    @JsonIgnore
     private Set<User> users;
 
 }

@@ -23,7 +23,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "users")
     @JsonIgnore
     private Set<Group> groups;
 
