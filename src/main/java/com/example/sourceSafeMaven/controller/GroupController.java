@@ -72,6 +72,7 @@ public class GroupController {
         else {
             List<User> users = userService.findUsersByIds(groupUsersRequest.getUsersId());
             var group = groupService.getGroup(groupUsersRequest.getGroupId());
+            // get the old users and add the new users to them.
             group.getUsers().addAll(users);
             Group updatedGroup = groupService.updateGroup(group);
             var groupResponse = new GroupResponse(updatedGroup);
