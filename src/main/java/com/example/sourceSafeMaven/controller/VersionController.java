@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class VersionController {
     @PostMapping("/addFile")
     public ResponseEntity<String> addFile(@ModelAttribute AddFileDto request, @RequestHeader HttpHeaders httpHeaders) {
         if (!request.getFile().isEmpty()) {
-            Long userId=jwtService.getUserIdByToken(httpHeaders);
+            Long userId = jwtService.getUserIdByToken(httpHeaders);
             return versionService.addFile(userId, request.getFile(), request.getGroupId(), request.getFileName());
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
@@ -44,20 +45,20 @@ public class VersionController {
 
     @GetMapping("/files")
     public Map<String, Object> getFiles(@RequestHeader HttpHeaders httpHeaders) {
-        Long userId=jwtService.getUserIdByToken(httpHeaders);
-        Map<String, Object> groups =  textFileService.getFiles(userId);
+        Long userId = jwtService.getUserIdByToken(httpHeaders);
+        Map<String, Object> groups = textFileService.getFiles(userId);
         return groups;
     }
 
-        @GetMapping("/download/{fileId}/{versionId}")
+    @GetMapping("/download/{fileId}/{versionId}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId,
                                                @PathVariable Long versionId,
                                                @RequestHeader HttpHeaders httpHeaders)
-                throws FileNotFoundException {
+            throws FileNotFoundException {
 
-        Long userId=jwtService.getUserIdByToken(httpHeaders);
+        Long userId = jwtService.getUserIdByToken(httpHeaders);
 
-        textFileService.checkInFile(fileId,userId);
+        textFileService.checkInFile(fileId, userId);
 
         byte[] versionBytes = versionService.getVersionBytes(versionId);
 
@@ -69,8 +70,11 @@ public class VersionController {
         // Set up the HttpHeaders
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", fileName+".txt"); // Set the desired file name
+        headers.setContentDispositionFormData("attachment", fileName + ".txt"); // Set the desired file name
 
         return new ResponseEntity<>(versionBytes, headers, HttpStatus.OK);
     }
+
+
+
 }

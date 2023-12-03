@@ -1,9 +1,6 @@
 package com.example.sourceSafeMaven.service;
 
-import com.example.sourceSafeMaven.entities.Group;
-import com.example.sourceSafeMaven.entities.TextFile;
-import com.example.sourceSafeMaven.entities.User;
-import com.example.sourceSafeMaven.entities.Version;
+import com.example.sourceSafeMaven.entities.*;
 import com.example.sourceSafeMaven.repository.GroupRepository;
 import com.example.sourceSafeMaven.repository.TextFileRepository;
 import com.example.sourceSafeMaven.repository.UserRepository;
@@ -44,6 +41,7 @@ public class VersionService {
                 TextFile fileVersion = new TextFile();
                 fileVersion.setGroup(group);
                 fileVersion.setFileName(fileName);
+                fileVersion.setReservationStatus(ReservationStatus.FREE);
                 textFileRepository.save(fileVersion);
 
                 version.setFile(fileVersion);
@@ -65,6 +63,37 @@ public class VersionService {
 
         byte[] version = versionx.getFileContent();
         return version;
+    }
+
+    public ResponseEntity<String> addFiadfawle(Long userId, MultipartFile file, Long groupId, String fileName) {
+        try {
+            if (groupRepository.existsByIdAndUsersId(groupId, userId)) {
+                String content = new String(file.getBytes());
+                Version version = new Version();
+                version.setFileContent(content.getBytes());
+                Optional<User> userOptional = userRepository.findById(userId);
+                User user = userOptional.orElse(null);
+                version.setUser(user);
+
+                Optional<Group> groupOptional = groupRepository.findById(groupId);
+                Group group = groupOptional.orElse(null);
+                //create file
+                TextFile fileVersion = new TextFile();
+                fileVersion.setGroup(group);
+                fileVersion.setFileName(fileName);
+                fileVersion.setReservationStatus(ReservationStatus.FREE);
+                textFileRepository.save(fileVersion);
+
+                version.setFile(fileVersion);
+
+                versionRepository.save(version);
+                return ResponseEntity.ok("File uploaded successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user is not in the group");
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
+        }
     }
 
 
