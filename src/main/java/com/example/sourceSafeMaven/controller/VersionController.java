@@ -3,6 +3,7 @@ package com.example.sourceSafeMaven.controller;
 import com.example.sourceSafeMaven.dto.AddFileDto;
 import com.example.sourceSafeMaven.entities.TextFile;
 import com.example.sourceSafeMaven.entities.Version;
+import com.example.sourceSafeMaven.models.FileAlreadyReservedException;
 import com.example.sourceSafeMaven.repository.TextFileRepository;
 import com.example.sourceSafeMaven.security.JwtService;
 import com.example.sourceSafeMaven.service.TextFileService;
@@ -84,6 +85,21 @@ public class VersionController {
 
         return new ResponseEntity<>(versionBytes, headers, HttpStatus.OK);
     }
+
+//    @GetMapping("/download/{fileId}")         //not work yet
+//    public ResponseEntity<String> reserveFile(
+//            @PathVariable Long fileId,
+//            @RequestHeader HttpHeaders httpHeaders)
+//            throws FileNotFoundException {
+//        Long userId = jwtService.getUserIdByToken(httpHeaders);
+//        try {
+//            textFileService.checkInFile(fileId, userId);
+//        }catch ( FileAlreadyReservedException){
+//            return ResponseEntity.status(HttpStatus.OK).body("File reserved done");
+//        }
+//        return ResponseEntity.status(HttpStatus.OK).body("File reserved done");
+//    }
+
 
 
 }

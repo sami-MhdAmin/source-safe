@@ -23,7 +23,9 @@ public class TextFileService {
     //When a user checks In a file, update the reservation status to RESERVED
     public void checkInFile(Long fileId, Long userId) throws FileNotFoundException {
         // Fetch the file from the database
-        TextFile file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
+        TextFile file = fileRepository.findById(fileId).orElseThrow(
+                () -> new FileNotFoundException("File not found")
+        );
 
         // Check if the file is currently free
         if (file.getReservationStatus() == ReservationStatus.FREE) {
