@@ -32,6 +32,10 @@ public class TextFile { //change name just to avoid the conflict with File on ja
     @JsonIgnore
     private List<Version> versions;
 
+    @OneToMany(mappedBy = "file")
+    @JsonIgnore
+    private List<ReservationHistory> reservationHistories;
+
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus = ReservationStatus.FREE;
 

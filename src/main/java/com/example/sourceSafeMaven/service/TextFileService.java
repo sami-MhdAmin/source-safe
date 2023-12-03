@@ -41,33 +41,35 @@ public class TextFileService {
         }
     }
 
+
+    //sami
     //When a user checks out a file, update the reservation status to FREE
-    public void checkOutFile(Long fileId,Long loggedInUserId) throws FileNotFoundException {
-        // Fetch the file from the database
-        TextFile file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
-
-        // Check if the file is currently reserved by the user
-        if (file.getReservationStatus() == ReservationStatus.RESERVED && file.getReservedByUserId().equals(loggedInUserId)) {
-//            file.getReservedByUserId():
-//            This method is assumed to retrieve the user ID of the person who currently has the file reserved.
-//            This could be a method in your File entity that returns the user ID associated with the reservation.
+//    public void checkOutFile(Long fileId,Long loggedInUserId) throws FileNotFoundException {
+//        // Fetch the file from the database
+//        TextFile file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
 //
-//            loggedInUserId:
-//            This is likely a variable or property representing the user ID of the person who is currently logged into the system.
-
-            // Release the reservation
-            file.setReservedByUserId(null);
-            file.setReservationStatus(ReservationStatus.FREE);
-
-            // Other check-in logic...
-
-            // Save the updated file to the database
-            fileRepository.save(file);
-        } else {
-            // Handle case where the file is not reserved by the user
-            throw new FileNotReservedByUserException("File is not reserved by the current user");
-        }
-    }
+//        // Check if the file is currently reserved by the user
+//        if (file.getReservationStatus() == ReservationStatus.RESERVED && file.getReservedByUserId().equals(loggedInUserId)) {
+////            file.getReservedByUserId():
+////            This method is assumed to retrieve the user ID of the person who currently has the file reserved.
+////            This could be a method in your File entity that returns the user ID associated with the reservation.
+////
+////            loggedInUserId:
+////            This is likely a variable or property representing the user ID of the person who is currently logged into the system.
+//
+//            // Release the reservation
+//            file.setReservedByUserId(null);
+//            file.setReservationStatus(ReservationStatus.FREE);
+//
+//            // Other check-in logic...
+//
+//            // Save the updated file to the database
+//            fileRepository.save(file);
+//        } else {
+//            // Handle case where the file is not reserved by the user
+//            throw new FileNotReservedByUserException("File is not reserved by the current user");
+//        }
+//    }
 
 
     public Map<String, Object> getFiles(Long userId) {
@@ -109,5 +111,7 @@ public class TextFileService {
     public List<TextFile> getFilesByGroupId(Long groupId) {
         return fileRepository.findAllByGroupId(groupId);
     }
+
+
 
 }

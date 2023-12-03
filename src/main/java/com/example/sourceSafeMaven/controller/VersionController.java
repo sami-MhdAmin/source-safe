@@ -84,5 +84,13 @@ public class VersionController {
     }
 
 
-
+    @PostMapping("/checkOut/{fileId}")
+    public ResponseEntity<String> addFile(@ModelAttribute AddFileDto request,@PathVariable Long fileId, @RequestHeader HttpHeaders httpHeaders) {
+        if (!request.getFile().isEmpty()) {
+            Long userId = jwtService.getUserIdByToken(httpHeaders);
+            return versionService.addFile(userId, request.getFile(), request.getGroupId(), request.getFileName());
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
+        }
+    }
 }
