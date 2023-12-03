@@ -3,6 +3,7 @@ package com.example.sourceSafeMaven.controller;
 import com.example.sourceSafeMaven.dto.AddFileDto;
 import com.example.sourceSafeMaven.entities.TextFile;
 import com.example.sourceSafeMaven.entities.Version;
+import com.example.sourceSafeMaven.models.FileAlreadyReservedException;
 import com.example.sourceSafeMaven.repository.TextFileRepository;
 import com.example.sourceSafeMaven.security.JwtService;
 import com.example.sourceSafeMaven.service.TextFileService;
@@ -35,7 +36,9 @@ public class VersionController {
     private TextFileRepository textFileRepository;
 //sa
 
-    @PostMapping("/addFile")
+    @PostMapping(path = "/addFile",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<String> addFile(@ModelAttribute AddFileDto request, @RequestHeader HttpHeaders httpHeaders) {
         if (!request.getFile().isEmpty()) {
             Long userId = jwtService.getUserIdByToken(httpHeaders);
@@ -52,7 +55,7 @@ public class VersionController {
         return groups;
     }
 
-    @GetMapping("/download/{fileId}/{versionId}")
+    @GetMapping("/download/{fileId}/{versionId}") // TODO : remove versionId and i can get it from somewhere else
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId,
                                                @PathVariable Long versionId,
                                                @RequestHeader HttpHeaders httpHeaders)
@@ -60,7 +63,7 @@ public class VersionController {
 
         Long userId = jwtService.getUserIdByToken(httpHeaders);
 
-        textFileService.checkInFile(fileId, userId);
+        textFileService.checkInFile(fileId, userId); //todo
 
         byte[] versionBytes = versionService.getVersionBytes(versionId);
 
@@ -82,6 +85,20 @@ public class VersionController {
 
         return new ResponseEntity<>(versionBytes, headers, HttpStatus.OK);
     }
+
+//    @GetMapping("/download/{fileId}")         //not work yet
+//    public ResponseEntity<String> reserveFile(
+//            @PathVariable Long fileId,
+//            @RequestHeader HttpHeaders httpHeaders)
+//            throws FileNotFoundException {
+//        Long userId = jwtService.getUserIdByToken(httpHeaders);
+//        try {
+//            textFileService.checkInFile(fileId, userId);
+//        }catch ( FileAlreadyReservedException){
+//            return ResponseEntity.status(HttpStatus.OK).body("File reserved done");
+//        }
+//        return ResponseEntity.status(HttpStatus.OK).body("File reserved done");
+//    }
 
 
     @PostMapping("/checkOut/{fileId}")

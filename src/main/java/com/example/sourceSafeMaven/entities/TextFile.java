@@ -23,6 +23,7 @@ public class TextFile { //change name just to avoid the conflict with File on ja
 
     @Column(name = "file_name")
     private String fileName;
+
     @ManyToOne
     @JoinColumn(name = "group_id")
     @JsonIgnore
