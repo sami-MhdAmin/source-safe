@@ -65,36 +65,6 @@ public class VersionService {
         return version;
     }
 
-    public ResponseEntity<String> addFiadfawle(Long userId, MultipartFile file, Long groupId, String fileName) {
-        try {
-            if (groupRepository.existsByIdAndUsersId(groupId, userId)) {
-                String content = new String(file.getBytes());
-                Version version = new Version();
-                version.setFileContent(content.getBytes());
-                Optional<User> userOptional = userRepository.findById(userId);
-                User user = userOptional.orElse(null);
-                version.setUser(user);
-
-                Optional<Group> groupOptional = groupRepository.findById(groupId);
-                Group group = groupOptional.orElse(null);
-                //create file
-                TextFile fileVersion = new TextFile();
-                fileVersion.setGroup(group);
-                fileVersion.setFileName(fileName);
-                fileVersion.setReservationStatus(ReservationStatus.FREE);
-                textFileRepository.save(fileVersion);
-
-                version.setFile(fileVersion);
-
-                versionRepository.save(version);
-                return ResponseEntity.ok("File uploaded successfully");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user is not in the group");
-            }
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
-        }
-    }
 
 
 }
