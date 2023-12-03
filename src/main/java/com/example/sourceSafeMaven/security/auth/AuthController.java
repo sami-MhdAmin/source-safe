@@ -1,7 +1,8 @@
 package com.example.sourceSafeMaven.security.auth;
 
-import com.example.sourceSafeMaven.models.AuthenticationResponse;
-import com.example.sourceSafeMaven.security.exception.UserNotFoundException;
+import com.example.sourceSafeMaven.models.AuthResponseModel;
+import com.example.sourceSafeMaven.models.ErrorResponse;
+import com.example.sourceSafeMaven.models.authExceptions.RegistrationException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,26 +24,37 @@ public class AuthController {
     private final AuthenticationService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    public ResponseEntity<?> register(
             @RequestBody RegisterRequest request
     ){
-        return ResponseEntity.ok(authService.register(request));
+        try {
+            AuthResponseModel response = authService.register(request);
+            return ResponseEntity.ok(response);
+
+        } catch (RegistrationException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
+    public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest request
     ){
         try {
-            AuthenticationResponse response = authService.authenticate(request);
+            AuthResponseModel response = authService.authenticate(request);
             System.out.println("in try controller");
             return ResponseEntity.ok(response);
         } catch (BadCredentialsException e) {
             System.out.println("in catch controller");
 
             // Handle user not found exception
+            //another way
+           /* Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("msg", "User not found");   then put errorResponse in .body(errorResponse) */
+
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new AuthenticationResponse("User not found"));
+                    .body(new ErrorResponse("User Not Found"));
         }
     }
 
