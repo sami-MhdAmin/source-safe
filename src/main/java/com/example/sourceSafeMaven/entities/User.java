@@ -31,6 +31,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Version> versions;
+
     @Column(nullable = false)
     private String password;
 

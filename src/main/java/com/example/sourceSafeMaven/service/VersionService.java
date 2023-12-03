@@ -19,18 +19,23 @@ import java.util.Optional;
 public class VersionService {
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private GroupRepository groupRepository;
+
     @Autowired
     private TextFileRepository textFileRepository;
+
     @Autowired
     private VersionRepository versionRepository;
+
     public ResponseEntity<String> addFile(Long userId, MultipartFile file, Long groupId, String fileName) {
         try {
             if (groupRepository.existsByIdAndUsersId(groupId, userId)) {
                 String content = new String(file.getBytes());
                 Version version = new Version();
                 version.setFileContent(content.getBytes());
+
                 Optional<User> userOptional = userRepository.findById(userId);
                 User user = userOptional.orElse(null);
                 version.setUser(user);
@@ -39,9 +44,11 @@ public class VersionService {
                 Group group = groupOptional.orElse(null);
                 //create file
                 TextFile fileVersion = new TextFile();
+
                 fileVersion.setGroup(group);
                 fileVersion.setFileName(fileName);
                 fileVersion.setReservationStatus(ReservationStatus.FREE);
+
                 textFileRepository.save(fileVersion);
 
                 version.setFile(fileVersion);

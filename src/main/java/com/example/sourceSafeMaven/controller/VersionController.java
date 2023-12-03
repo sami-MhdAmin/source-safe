@@ -54,7 +54,7 @@ public class VersionController {
         return groups;
     }
 
-    @GetMapping("/download/{fileId}/{versionId}")
+    @GetMapping("/download/{fileId}/{versionId}") // TODO : remove versionId and i can get it from somewhere else
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId,
                                                @PathVariable Long versionId,
                                                @RequestHeader HttpHeaders httpHeaders)
@@ -62,7 +62,7 @@ public class VersionController {
 
         Long userId = jwtService.getUserIdByToken(httpHeaders);
 
-        textFileService.checkInFile(fileId, userId);
+        textFileService.checkInFile(fileId, userId); //todo
 
         byte[] versionBytes = versionService.getVersionBytes(versionId);
 
