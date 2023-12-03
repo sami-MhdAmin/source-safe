@@ -33,7 +33,7 @@ public class TextFile { //change name just to avoid the conflict with File on ja
     private List<Version> versions;
 
     @Enumerated(EnumType.STRING)
-    private ReservationStatus reservationStatus;
+    private ReservationStatus reservationStatus = ReservationStatus.FREE;
 
     private Long reservedByUserId;
 

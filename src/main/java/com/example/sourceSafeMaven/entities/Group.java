@@ -23,12 +23,19 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @OneToMany(mappedBy = "group")
     @JsonIgnore
     private List<TextFile> files = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "groups")
-    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "group_user",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )    @JsonIgnore
     private Set<User> users;
 
 }

@@ -1,5 +1,6 @@
 package com.example.sourceSafeMaven.entities;
 
 public enum Role {
-    USER
+    USER,
+    ADMIN
 }
