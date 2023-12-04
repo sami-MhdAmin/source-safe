@@ -111,24 +111,32 @@ public class TextFileService {
     //When a user checks out a file, update the reservation status to FREE
     public ResponseEntity<String> checkOutFile(Long userId, Long fileId, MultipartFile file) throws IOException {
         TextFile textFile = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
-        textFile.setReservationStatus(ReservationStatus.FREE);
-
-        String content = new String(file.getBytes());
-        Version version = new Version();
-        version.setFileContent(content.getBytes());
         User user = userRepository.findById(userId).orElse(null);
-        version.setUser(user);
-        version.setTextFile(textFile);
-        versionRepository.save(version);
+
+        if(textFile.getReservationStatus()==ReservationStatus.RESERVED&&reservationHistoryRepository.existsByUser_IdAndTextFile_IdAndCheckOutStatusIsNull(userId,textFile.getId()))
+        {
+            textFile.setReservationStatus(ReservationStatus.FREE);
+            String content = new String(file.getBytes());
+            Version version = new Version();
+            version.setFileContent(content.getBytes());
+            version.setUser(user);
+            version.setTextFile(textFile);
+            versionRepository.save(version);
 
 
-        ReservationHistory reservationHistory = reservationHistoryRepository.findByTextFileIdAndCheckOutStatusNullAndCheckOutEndTimeNull(textFile.getId());
+            ReservationHistory reservationHistory = reservationHistoryRepository.findByTextFileIdAndCheckOutStatusNullAndCheckOutEndTimeNull(textFile.getId());
 
-        reservationHistory.setCheckOutStatus(CheckOutStatus.UPDATE);
-        reservationHistory.setCheckOutEndTime(LocalDateTime.now());
-        reservationHistoryRepository.save(reservationHistory);
-        fileRepository.save(textFile);
-        return ResponseEntity.ok("  Files Checked Out Successfully");
+            reservationHistory.setCheckOutStatus(CheckOutStatus.UPDATE);
+            reservationHistory.setCheckOutEndTime(LocalDateTime.now());
+            reservationHistoryRepository.save(reservationHistory);
+            fileRepository.save(textFile);
+            return ResponseEntity.ok("  Files Checked Out Successfully");
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there no check in for this file by this user");
+
+        }
+
     }
 
 }

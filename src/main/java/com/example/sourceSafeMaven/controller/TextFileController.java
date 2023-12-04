@@ -1,7 +1,8 @@
 package com.example.sourceSafeMaven.controller;
 
-import com.example.sourceSafeMaven.dto.file.AddFileDto;
 import com.example.sourceSafeMaven.dto.file.CheckOutFileDto;
+import com.example.sourceSafeMaven.entities.ReservationHistory;
+import com.example.sourceSafeMaven.repository.ReservationHistoryRepository;
 import com.example.sourceSafeMaven.security.JwtService;
 import com.example.sourceSafeMaven.service.TextFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -22,6 +24,10 @@ public class TextFileController {
     private TextFileService textFileService;
     @Autowired
     private JwtService jwtService;
+
+
+    @Autowired
+    private ReservationHistoryRepository reservationHistoryRepository;
 
     @PostMapping("/checkIn")
     public ResponseEntity<String> checkIn(@RequestBody List<Long> fileIds, @RequestHeader HttpHeaders httpHeaders) {
@@ -43,4 +49,6 @@ public class TextFileController {
             throw new RuntimeException(e);
         }
     }
+
+
 }

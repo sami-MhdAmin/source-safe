@@ -61,7 +61,7 @@ public class VersionController {
         Long userId = jwtService.getUserIdByToken(httpHeaders);
 
 
-        byte[] versionBytes = versionService.download(1L);
+        byte[] versionBytes = versionService.download(fileId);
 
         // Set up the HttpHeaders
         HttpHeaders headers = new HttpHeaders();

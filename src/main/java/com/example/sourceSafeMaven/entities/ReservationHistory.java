@@ -41,38 +41,11 @@ public class ReservationHistory {
     @PrePersist
     private void setTimestamp() {
         this.timestamp = LocalDateTime.now();
-        this.expirationTime=LocalDateTime.now().plusSeconds(2L);
+        this.expirationTime = LocalDateTime.now().plusMinutes(1L);
     }
 
     private LocalDateTime expirationTime;
 
     private LocalDateTime checkOutEndTime;
 
-//    public boolean isExpired() {
-//        return expirationTime != null && LocalDateTime.now().isAfter(expirationTime);
-//    }
-
-//    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-//    private ScheduledFuture<?> timerTask;
-
-//    public void calculateExpirationTime() {
-//        if (timestamp != null && CheckOutStatus == null) {
-//            DateTime expirationTime = new DateTime(timestamp).plusSeconds(5).toDateTime(DateTimeZone.getDefault());
-//            long delay = expirationTime.getMillis() - System.currentTimeMillis();
-//
-//            if (timerTask != null) {
-//                timerTask.cancel(false);
-//            }
-//
-//            timerTask = scheduler.schedule(() -> {
-//                synchronized (this) {
-//                    if (CheckOutStatus == null) { // Check if the status is still null
-//                        setCheckOutStatus(CheckOutStatus.TIMER_END);
-//                        // Save the updated ReservationHistory in the database or perform any other necessary actions
-//                        setCheckOutEndTime(LocalDateTime.now());
-//                    }
-//                }
-//            }, Duration.millis(delay).getMillis());
-//        }
-//    }
 }
