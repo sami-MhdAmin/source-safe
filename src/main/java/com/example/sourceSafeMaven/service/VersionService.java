@@ -64,6 +64,7 @@ public class VersionService {
                 reservationHistory.setCheckOutEndTime(LocalDateTime.now());
                 reservationHistoryRepository.save(reservationHistory);
 
+
                 return ResponseEntity.ok("File uploaded successfully");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The user is not in the group");

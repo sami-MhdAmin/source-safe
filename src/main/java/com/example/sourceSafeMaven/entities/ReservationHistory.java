@@ -35,7 +35,7 @@ public class ReservationHistory {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private CheckOutStatus CheckOutStatus;
+    private CheckOutStatus checkOutStatus;
 
     private LocalDateTime timestamp;
 

@@ -1,13 +1,16 @@
 package com.example.sourceSafeMaven.service;
+
 import com.example.sourceSafeMaven.entities.*;
 import com.example.sourceSafeMaven.repository.ReservationHistoryRepository;
 import com.example.sourceSafeMaven.repository.TextFileRepository;
 import com.example.sourceSafeMaven.repository.UserRepository;
+import com.example.sourceSafeMaven.repository.VersionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -20,6 +23,9 @@ public class TextFileService {
     private TextFileRepository fileRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private VersionRepository versionRepository;
 
     @Autowired
     private ReservationHistoryRepository reservationHistoryRepository;
@@ -104,18 +110,15 @@ public class TextFileService {
         TextFile textFile = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
         textFile.setReservationStatus(ReservationStatus.FREE);
 
+        String content = new String(file.getBytes());
+        Version version = new Version();
+        version.setFileContent(content.getBytes());
+        User user = userRepository.findById(userId).orElse(null);
+        version.setUser(user);
+        versionRepository.save(version);
 
-//
-//        String content = new String(file.getBytes());
-//        Version version = new Version();
-//        version.setFileContent(content.getBytes());
-//        version.setUser();
 
-
-        ////////////////i need to fetch the file reservation history where status null
-        ReservationHistory reservationHistory = new ReservationHistory();
-        reservationHistory.setTextFile(textFile);
-        reservationHistory.setUser(userRepository.findById(userId).orElse(null));
+        ReservationHistory reservationHistory = reservationHistoryRepository.findByTextFileIdAndCheckOutStatusNull(textFile.getId());
         reservationHistory.setCheckOutStatus(CheckOutStatus.UPDATE);
         reservationHistory.setCheckOutEndTime(LocalDateTime.now());
         reservationHistoryRepository.save(reservationHistory);
