@@ -1,12 +1,12 @@
-package com.example.sourceSafeMaven.dto;
+package com.example.sourceSafeMaven.dto.file;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-
 @Setter
 @Getter
-public class AddFileDto {
+public class CheckOutFileDto {
     private MultipartFile file;
-    private String fileName;
-    private Long groupId;
+    private Long fileId;
+
 }

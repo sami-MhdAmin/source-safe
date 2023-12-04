@@ -21,8 +21,8 @@ public class Version {
 
 
     @ManyToOne
-    @JoinColumn(name = "file_id")
-    private TextFile file;
+    @JoinColumn(name = "text_file_id")
+    private TextFile textFile;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

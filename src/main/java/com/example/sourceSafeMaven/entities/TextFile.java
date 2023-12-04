@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "file_version")
+@Table(name = "text_file")
 public class TextFile { //change name just to avoid the conflict with File on java
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +29,17 @@ public class TextFile { //change name just to avoid the conflict with File on ja
     @JsonIgnore
     private Group group;
 
-    @OneToMany(mappedBy = "file")
+    @OneToMany(mappedBy = "textFile")
     @JsonIgnore
     private List<Version> versions;
 
-    @OneToMany(mappedBy = "file")
+    @OneToMany(mappedBy = "textFile")
     @JsonIgnore
     private List<ReservationHistory> reservationHistories;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus = ReservationStatus.FREE;
 
-    private Long reservedByUserId;
 
 }
 

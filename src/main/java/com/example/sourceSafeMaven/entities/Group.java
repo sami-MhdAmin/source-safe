@@ -28,7 +28,7 @@ public class Group {
 
     @OneToMany(mappedBy = "group")
     @JsonIgnore
-    private List<TextFile> files = new ArrayList<>();
+    private List<TextFile> textFiles = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(

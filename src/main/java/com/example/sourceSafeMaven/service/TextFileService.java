@@ -1,14 +1,16 @@
 package com.example.sourceSafeMaven.service;
-
 import com.example.sourceSafeMaven.entities.*;
-import com.example.sourceSafeMaven.models.FileAlreadyReservedException;
-import com.example.sourceSafeMaven.models.FileNotReservedByUserException;
+import com.example.sourceSafeMaven.repository.ReservationHistoryRepository;
 import com.example.sourceSafeMaven.repository.TextFileRepository;
 import com.example.sourceSafeMaven.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -19,60 +21,8 @@ public class TextFileService {
     @Autowired
     private UserRepository userRepository;
 
-
-    //When a user checks In a file, update the reservation status to RESERVED
-    public void checkInFile(Long fileId, Long userId) throws FileNotFoundException {
-        // Fetch the file from the database
-        TextFile file = fileRepository.findById(fileId).orElseThrow(
-                () -> new FileNotFoundException("File not found")
-        );
-
-        // Check if the file is currently free
-        if (file.getReservationStatus() == ReservationStatus.FREE) {
-            // Reserve the file for the user
-            file.setReservedByUserId(userId);
-            file.setReservationStatus(ReservationStatus.RESERVED);
-
-            // Other check-out logic...
-
-            // Save the updated file to the database
-            fileRepository.save(file);
-        } else {
-            // Handle case where the file is already reserved
-            throw new FileAlreadyReservedException("File is already reserved by another user");
-        }
-    }
-
-
-    //sami
-    //When a user checks out a file, update the reservation status to FREE
-//    public void checkOutFile(Long fileId,Long loggedInUserId) throws FileNotFoundException {
-//        // Fetch the file from the database
-//        TextFile file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
-//
-//        // Check if the file is currently reserved by the user
-//        if (file.getReservationStatus() == ReservationStatus.RESERVED && file.getReservedByUserId().equals(loggedInUserId)) {
-////            file.getReservedByUserId():
-////            This method is assumed to retrieve the user ID of the person who currently has the file reserved.
-////            This could be a method in your File entity that returns the user ID associated with the reservation.
-////
-////            loggedInUserId:
-////            This is likely a variable or property representing the user ID of the person who is currently logged into the system.
-//
-//            // Release the reservation
-//            file.setReservedByUserId(null);
-//            file.setReservationStatus(ReservationStatus.FREE);
-//
-//            // Other check-in logic...
-//
-//            // Save the updated file to the database
-//            fileRepository.save(file);
-//        } else {
-//            // Handle case where the file is not reserved by the user
-//            throw new FileNotReservedByUserException("File is not reserved by the current user");
-//        }
-//    }
-
+    @Autowired
+    private ReservationHistoryRepository reservationHistoryRepository;
 
     public Map<String, Object> getFiles(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
@@ -85,7 +35,7 @@ public class TextFileService {
             groupData.put("id", group.getId());
 
             List<Map<String, Object>> fileList = new ArrayList<>();
-            List<TextFile> files = group.getFiles();
+            List<TextFile> files = group.getTextFiles();
 
             for (TextFile file : files) {
                 List<Version> versions = file.getVersions();
@@ -114,6 +64,64 @@ public class TextFileService {
         return fileRepository.findAllByGroupId(groupId);
     }
 
+    //When a user checks In a file, update the reservation status to RESERVED
+    public ResponseEntity<String> checkInFile(Long userId, List<Long> fileIds) throws FileNotFoundException {
+        boolean allFilesFree = true;
 
+        for (Long fileId : fileIds) {
+            TextFile file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
+
+            if (!file.getReservationStatus().equals(ReservationStatus.FREE)) {
+                allFilesFree = false;
+                break;
+            }
+        }
+        if (allFilesFree) {
+            for (Long fileId : fileIds) {
+                TextFile file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
+
+
+                file.setReservationStatus(ReservationStatus.RESERVED);
+                fileRepository.save(file);
+
+
+                ReservationHistory reservationHistory = new ReservationHistory();
+                reservationHistory.setTextFile(file);
+                reservationHistory.setUser(userRepository.findById(userId).orElse(null));
+                reservationHistoryRepository.save(reservationHistory);
+
+
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Some or all of the files you requested are already reserved");
+        }
+        return null;
+    }
+
+
+    //When a user checks out a file, update the reservation status to FREE
+    public ResponseEntity<String> checkOutFile(Long userId, Long fileId, MultipartFile file) throws IOException {
+        TextFile textFile = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
+        textFile.setReservationStatus(ReservationStatus.FREE);
+
+
+//
+//        String content = new String(file.getBytes());
+//        Version version = new Version();
+//        version.setFileContent(content.getBytes());
+//        version.setUser();
+
+
+        ////////////////i need to fetch the file reservation history where status null
+        ReservationHistory reservationHistory = new ReservationHistory();
+        reservationHistory.setTextFile(textFile);
+        reservationHistory.setUser(userRepository.findById(userId).orElse(null));
+        reservationHistory.setCheckOutStatus(CheckOutStatus.UPDATE);
+        reservationHistory.setCheckOutEndTime(LocalDateTime.now());
+        reservationHistoryRepository.save(reservationHistory);
+        fileRepository.save(textFile);
+
+        return null;
+    }
 
 }

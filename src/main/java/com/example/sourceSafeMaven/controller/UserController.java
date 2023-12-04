@@ -1,17 +1,12 @@
 package com.example.sourceSafeMaven.controller;
 
-import com.example.sourceSafeMaven.dto.AddFileDto;
 import com.example.sourceSafeMaven.security.JwtService;
-import com.example.sourceSafeMaven.service.TextFileService;
 import com.example.sourceSafeMaven.service.UserService;
-import com.example.sourceSafeMaven.service.VersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")

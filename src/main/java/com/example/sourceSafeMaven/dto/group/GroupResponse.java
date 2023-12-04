@@ -19,6 +19,6 @@ public class GroupResponse {
         this.id = group.getId();
         this.name = group.getName();
         this.users = group.getUsers().stream().map(user -> user.getId()).toList();
-        this.files = group.getFiles().stream().map(file -> new FileResponse(file)).toList();
+        this.files = group.getTextFiles().stream().map(file -> new FileResponse(file)).toList();
     }
 }

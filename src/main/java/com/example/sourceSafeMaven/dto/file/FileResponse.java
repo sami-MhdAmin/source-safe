@@ -20,6 +20,6 @@ public class FileResponse {
         this.id = textFile.getId();
         this.name = textFile.getFileName();
         this.reservationStatus = textFile.getReservationStatus();
-        this.userId = textFile.getReservedByUserId();
+//        this.userId = textFile.getReservedByUserId();
     }
 }
