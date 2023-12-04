@@ -33,12 +33,12 @@ public class TextFileController {
         }
     }
 
-    @PostMapping("/checkOut/{fileId}")
+    @PostMapping("/checkOut")
     public ResponseEntity<String> checkOut(@ModelAttribute CheckOutFileDto request, @RequestHeader HttpHeaders httpHeaders) {
 
         Long userId = jwtService.getUserIdByToken(httpHeaders);
         try {
-            return textFileService.checkOutFile(userId, request.getFileId(),request.getFile());
+            return textFileService.checkOutFile(userId, request.getFileId(), request.getFile());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

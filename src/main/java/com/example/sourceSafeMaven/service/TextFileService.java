@@ -98,10 +98,11 @@ public class TextFileService {
 
 
             }
+            return ResponseEntity.ok(fileIds.size() + "  Files Checked In Successfully");
+
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Some or all of the files you requested are already reserved");
         }
-        return null;
     }
 
 
@@ -115,16 +116,17 @@ public class TextFileService {
         version.setFileContent(content.getBytes());
         User user = userRepository.findById(userId).orElse(null);
         version.setUser(user);
+        version.setTextFile(textFile);
         versionRepository.save(version);
 
 
-        ReservationHistory reservationHistory = reservationHistoryRepository.findByTextFileIdAndCheckOutStatusNull(textFile.getId());
+        ReservationHistory reservationHistory = reservationHistoryRepository.findByTextFileIdAndCheckOutStatusNullAndCheckOutEndTimeNull(textFile.getId());
+
         reservationHistory.setCheckOutStatus(CheckOutStatus.UPDATE);
         reservationHistory.setCheckOutEndTime(LocalDateTime.now());
         reservationHistoryRepository.save(reservationHistory);
         fileRepository.save(textFile);
-
-        return null;
+        return ResponseEntity.ok("  Files Checked Out Successfully");
     }
 
 }

@@ -7,5 +7,5 @@ import javax.swing.*;
 import java.util.List;
 
 public interface ReservationHistoryRepository extends JpaRepository<ReservationHistory, Long> {
-    ReservationHistory findByTextFileIdAndCheckOutStatusNull(Long textFileId);
+    ReservationHistory findByTextFileIdAndCheckOutStatusNullAndCheckOutEndTimeNull(Long textFileId);
 }
