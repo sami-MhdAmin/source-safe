@@ -1,6 +1,8 @@
 package com.example.sourceSafeMaven.service;
 
 import com.example.sourceSafeMaven.entities.*;
+import com.example.sourceSafeMaven.entities.enums.CheckOutStatus;
+import com.example.sourceSafeMaven.entities.enums.ReservationStatus;
 import com.example.sourceSafeMaven.repository.ReservationHistoryRepository;
 import com.example.sourceSafeMaven.repository.TextFileRepository;
 import com.example.sourceSafeMaven.repository.UserRepository;

@@ -1,12 +1,14 @@
 package com.example.sourceSafeMaven.controller;
 
 import com.example.sourceSafeMaven.dto.file.FileResponse;
+import com.example.sourceSafeMaven.dto.group.AddGroupRequest;
 import com.example.sourceSafeMaven.dto.group.GroupResponse;
 import com.example.sourceSafeMaven.dto.group.GroupUsersRequest;
 import com.example.sourceSafeMaven.dto.group.MiniGroupResponse;
 import com.example.sourceSafeMaven.entities.Group;
-import com.example.sourceSafeMaven.entities.Role;
+import com.example.sourceSafeMaven.entities.enums.Role;
 import com.example.sourceSafeMaven.entities.User;
+import com.example.sourceSafeMaven.models.ResponseModel;
 import com.example.sourceSafeMaven.security.JwtService;
 import com.example.sourceSafeMaven.service.GroupService;
 import com.example.sourceSafeMaven.service.TextFileService;
@@ -37,14 +39,14 @@ public class GroupController {
 
     @GetMapping()
     public List<MiniGroupResponse> getGroups(@RequestHeader HttpHeaders httpHeaders) {
-        var groups = groupService.getGroups();
-        var groupsResponse = groups.stream().map(group -> new MiniGroupResponse(group)).toList();
+        List<Group> groups = groupService.getGroups();
+        List<MiniGroupResponse> groupsResponse = groups.stream().map(group -> new MiniGroupResponse(group)).toList();
         return groupsResponse;
     }
 
     @GetMapping("/{groupId}")
     public GroupResponse getGroup(@RequestHeader HttpHeaders httpHeaders, @PathVariable Long groupId) {
-        var group = groupService.getGroup(groupId);
+        var group = groupService.getGroupById(groupId);
         var groupResponse = new GroupResponse(group);
         return groupResponse;
     }
@@ -58,7 +60,7 @@ public class GroupController {
 
     @GetMapping("/v2/{groupId}/files")
     public List<FileResponse> getFilesV2(@RequestHeader HttpHeaders httpHeaders, @PathVariable Long groupId) {
-        var group = groupService.getGroup(groupId);
+        var group = groupService.getGroupById(groupId);
         var fileResponseList = group.getTextFiles().stream().map(file -> new FileResponse(file)).toList();
         return fileResponseList;
     }
@@ -71,7 +73,7 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         else {
             List<User> users = userService.findUsersByIds(groupUsersRequest.getUsersId());
-            var group = groupService.getGroup(groupUsersRequest.getGroupId());
+            var group = groupService.getGroupById(groupUsersRequest.getGroupId());
             // get the old users and add the new users to them.
             group.getUsers().addAll(users);
             Group updatedGroup = groupService.updateGroup(group);
@@ -82,11 +84,17 @@ public class GroupController {
 
     @PostMapping("/change_name/{groupId}")
     public ResponseEntity<GroupResponse> addUser(@RequestHeader HttpHeaders httpHeaders, @PathVariable Long groupId, @RequestBody String name) {
-        var group = groupService.getGroup(groupId);
+        var group = groupService.getGroupById(groupId);
         group.setName(name);
         Group updatedGroup = groupService.updateGroup(group);
         var groupResponse = new GroupResponse(updatedGroup);
         return ResponseEntity.status(HttpStatus.OK).body(groupResponse);
 
+    }
+
+    @PostMapping("/add")
+    public ResponseModel<Group> addGroup(@RequestHeader HttpHeaders httpHeaders, @RequestBody AddGroupRequest name){
+        Group group = groupService.addGroup(name);
+        return new ResponseModel<>(HttpStatus.OK.value(),"group added successfully",group);
     }
 }

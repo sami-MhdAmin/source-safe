@@ -1,6 +1,8 @@
 package com.example.sourceSafeMaven.service;
 
 import com.example.sourceSafeMaven.entities.*;
+import com.example.sourceSafeMaven.entities.enums.CheckOutStatus;
+import com.example.sourceSafeMaven.entities.enums.ReservationStatus;
 import com.example.sourceSafeMaven.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,9 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

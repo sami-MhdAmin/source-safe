@@ -1,6 +1,6 @@
 package com.example.sourceSafeMaven.security.auth;
 
-import com.example.sourceSafeMaven.entities.Role;
+import com.example.sourceSafeMaven.entities.enums.Role;
 import com.example.sourceSafeMaven.entities.User;
 import com.example.sourceSafeMaven.models.AuthResponseModel;
 import com.example.sourceSafeMaven.models.authExceptions.EmailAlreadyExistsException;

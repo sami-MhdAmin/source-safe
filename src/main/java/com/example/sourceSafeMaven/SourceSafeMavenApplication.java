@@ -1,6 +1,6 @@
 package com.example.sourceSafeMaven;
 
-//import com.example.sourceSafeMaven.entities.Role;
+//import com.example.sourceSafeMaven.entities.enums.Role;
 //import com.example.sourceSafeMaven.repository.RoleRepository;
 import com.example.sourceSafeMaven.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;

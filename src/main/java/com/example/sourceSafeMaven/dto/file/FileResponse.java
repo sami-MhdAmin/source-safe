@@ -1,6 +1,6 @@
 package com.example.sourceSafeMaven.dto.file;
 
-import com.example.sourceSafeMaven.entities.ReservationStatus;
+import com.example.sourceSafeMaven.entities.enums.ReservationStatus;
 import com.example.sourceSafeMaven.entities.TextFile;
 import lombok.Getter;
 import lombok.Setter;

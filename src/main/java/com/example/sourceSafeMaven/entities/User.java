@@ -1,4 +1,5 @@
 package com.example.sourceSafeMaven.entities;
+import com.example.sourceSafeMaven.entities.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
