@@ -1,6 +1,7 @@
 package com.example.sourceSafeMaven.entities;
 
 
+import com.example.sourceSafeMaven.entities.enums.ReservationStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

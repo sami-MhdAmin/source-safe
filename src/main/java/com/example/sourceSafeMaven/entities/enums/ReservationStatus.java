@@ -1,4 +1,4 @@
-package com.example.sourceSafeMaven.entities;
+package com.example.sourceSafeMaven.entities.enums;
 
 public enum ReservationStatus {
     FREE, // File is not reserved

@@ -1,5 +1,6 @@
 package com.example.sourceSafeMaven.entities;
 
+import com.example.sourceSafeMaven.entities.enums.CheckOutStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,9 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
+
 //import org.joda.time.DateTime;
 //import org.joda.time.DateTimeZone;
 //import org.joda.time.Duration;
