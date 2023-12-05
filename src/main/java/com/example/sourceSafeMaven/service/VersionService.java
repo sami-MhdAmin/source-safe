@@ -99,4 +99,15 @@ public class VersionService {
         return null;
     }
 
+    public List<Version> fileVersions(Long userId,Long fileId) throws FileNotFoundException {
+        TextFile textFile = textFileRepository.findById(fileId)
+                .orElseThrow(() -> new FileNotFoundException("File not found"));
+        if (textFile.getReservationStatus() == ReservationStatus.RESERVED && reservationHistoryRepository.existsByUser_IdAndTextFile_IdAndCheckOutStatusIsNull(userId, textFile.getId())) {
+
+            List<Version> versions = textFile.getVersions();
+            return  versions;
+        }
+        return null;
+    }
+
 }

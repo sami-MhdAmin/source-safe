@@ -1,18 +1,17 @@
 package com.example.sourceSafeMaven.controller;
-
 import com.example.sourceSafeMaven.dto.file.CheckOutFileDto;
 import com.example.sourceSafeMaven.entities.ReservationHistory;
 import com.example.sourceSafeMaven.repository.ReservationHistoryRepository;
 import com.example.sourceSafeMaven.security.JwtService;
+import com.example.sourceSafeMaven.service.ReservationHistoryService;
 import com.example.sourceSafeMaven.service.TextFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -25,9 +24,9 @@ public class TextFileController {
     @Autowired
     private JwtService jwtService;
 
-
     @Autowired
-    private ReservationHistoryRepository reservationHistoryRepository;
+    private ReservationHistoryService reservationHistoryService;
+
 
     @PostMapping("/checkIn")
     public ResponseEntity<String> checkIn(@RequestBody List<Long> fileIds, @RequestHeader HttpHeaders httpHeaders) {
@@ -51,4 +50,17 @@ public class TextFileController {
     }
 
 
+    @GetMapping("/historyOfFile/{fileId}")
+    public ResponseEntity<?> historyOfFile(@RequestHeader HttpHeaders headers,@PathVariable Long fileId ) {
+        Long userId = jwtService.getUserIdByToken(headers);
+        List<ReservationHistory> reservationHistories=reservationHistoryService.historyOfFile(fileId);
+        if(reservationHistories!=null) {
+            return ResponseEntity.status(HttpStatus.OK).body(reservationHistories);
+        }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The File does not have any Check Ins");
+
+        }
+    }
 }

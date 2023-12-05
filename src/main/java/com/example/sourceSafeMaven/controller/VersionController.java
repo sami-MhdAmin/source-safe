@@ -1,7 +1,6 @@
 package com.example.sourceSafeMaven.controller;
 
 import com.example.sourceSafeMaven.dto.file.AddFileDto;
-import com.example.sourceSafeMaven.entities.TextFile;
 import com.example.sourceSafeMaven.entities.Version;
 import com.example.sourceSafeMaven.repository.TextFileRepository;
 import com.example.sourceSafeMaven.security.JwtService;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/version")
@@ -74,4 +72,12 @@ public class VersionController {
             return  ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to download this file");
         }
     }
+
+    @GetMapping("/fileVersions/{fileId}")
+    public ResponseEntity<List<Version>> fileVersions(@RequestHeader HttpHeaders httpHeaders, @PathVariable Long fileId) throws FileNotFoundException {
+        Long userId = jwtService.getUserIdByToken(httpHeaders);
+        List<Version> versions = versionService.fileVersions(userId,fileId);
+        return  ResponseEntity.status(HttpStatus.OK).body(versions);
+    }
+
 }

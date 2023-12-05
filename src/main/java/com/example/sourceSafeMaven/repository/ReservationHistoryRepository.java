@@ -11,4 +11,10 @@ public interface ReservationHistoryRepository extends JpaRepository<ReservationH
     ReservationHistory findByTextFileIdAndCheckOutStatusNullAndCheckOutEndTimeNull(Long textFileId);
 
     List<ReservationHistory> findByExpirationTimeBeforeAndCheckOutStatusIsNull(LocalDateTime currentTime);
-    boolean existsByUser_IdAndTextFile_IdAndCheckOutStatusIsNull(Long userId, Long textFileId);}
+
+    List<ReservationHistory> findByUserId(Long userId);
+    List<ReservationHistory>  findByTextFileId(Long textFileId);
+
+    boolean existsByUser_IdAndTextFile_IdAndCheckOutStatusIsNull(Long userId, Long textFileId);
+
+}
