@@ -54,20 +54,24 @@ public class VersionController {
     }
 
     @GetMapping("/download/{fileId}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileId,
+    public ResponseEntity<?> downloadFile(@PathVariable Long fileId,
                                                @RequestHeader HttpHeaders httpHeaders)
             throws FileNotFoundException {
 
         Long userId = jwtService.getUserIdByToken(httpHeaders);
 
 
-        byte[] versionBytes = versionService.download(fileId);
+        byte[] versionBytes = versionService.download(userId,fileId);
+        if (versionBytes!=null) {
+            // Set up the HttpHeaders
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "file.txt");
 
-        // Set up the HttpHeaders
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment",   "file.txt");
-
-        return new ResponseEntity<>(versionBytes, headers, HttpStatus.OK);
+            return new ResponseEntity<>(versionBytes, headers, HttpStatus.OK);
+        }
+        else {
+            return  ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to download this file");
+        }
     }
 }

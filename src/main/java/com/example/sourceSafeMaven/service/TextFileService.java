@@ -113,8 +113,7 @@ public class TextFileService {
         TextFile textFile = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
         User user = userRepository.findById(userId).orElse(null);
 
-        if(textFile.getReservationStatus()==ReservationStatus.RESERVED&&reservationHistoryRepository.existsByUser_IdAndTextFile_IdAndCheckOutStatusIsNull(userId,textFile.getId()))
-        {
+        if (textFile.getReservationStatus() == ReservationStatus.RESERVED && reservationHistoryRepository.existsByUser_IdAndTextFile_IdAndCheckOutStatusIsNull(userId, textFile.getId())) {
             textFile.setReservationStatus(ReservationStatus.FREE);
             String content = new String(file.getBytes());
             Version version = new Version();
@@ -131,8 +130,7 @@ public class TextFileService {
             reservationHistoryRepository.save(reservationHistory);
             fileRepository.save(textFile);
             return ResponseEntity.ok("  Files Checked Out Successfully");
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there no check in for this file by this user");
 
         }

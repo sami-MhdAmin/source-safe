@@ -84,16 +84,19 @@ public class VersionService {
     }
 
 
-    public byte[] download(Long fileId) throws FileNotFoundException {
+    public byte[] download(Long userId, Long fileId) throws FileNotFoundException {
         TextFile textFile = textFileRepository.findById(fileId)
                 .orElseThrow(() -> new FileNotFoundException("File not found"));
+        if (textFile.getReservationStatus() == ReservationStatus.RESERVED && reservationHistoryRepository.existsByUser_IdAndTextFile_IdAndCheckOutStatusIsNull(userId, textFile.getId())) {
 
-        List<Version> versions = textFile.getVersions();
-        Version lastVersion = null;
-        if (!versions.isEmpty()) {
-            lastVersion = versions.get(versions.size() - 1);
+            List<Version> versions = textFile.getVersions();
+            Version lastVersion = null;
+            if (!versions.isEmpty()) {
+                lastVersion = versions.get(versions.size() - 1);
+            }
+            return  lastVersion.getFileContent();
         }
-        return lastVersion.getFileContent();
+        return null;
     }
 
 }
