@@ -13,8 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class VersionService {
@@ -94,18 +93,26 @@ public class VersionService {
             if (!versions.isEmpty()) {
                 lastVersion = versions.get(versions.size() - 1);
             }
-            return  lastVersion.getFileContent();
+            return lastVersion.getFileContent();
         }
         return null;
     }
 
-    public List<Version> fileVersions(Long userId,Long fileId) throws FileNotFoundException {
+    public List<Map<String, Object>> fileVersions(Long userId, Long fileId) throws FileNotFoundException {
         TextFile textFile = textFileRepository.findById(fileId)
                 .orElseThrow(() -> new FileNotFoundException("File not found"));
         if (textFile.getReservationStatus() == ReservationStatus.RESERVED && reservationHistoryRepository.existsByUser_IdAndTextFile_IdAndCheckOutStatusIsNull(userId, textFile.getId())) {
-
             List<Version> versions = textFile.getVersions();
-            return  versions;
+            List<Map<String, Object>> responseList = new ArrayList<>();
+            for (Version version : versions) {
+                Map<String, Object> versionData = new HashMap<>();
+                versionData.put("id", version.getId());
+                byte[] fileContent = version.getFileContent();
+                String content = new String(fileContent);
+                versionData.put("fileContent", content);
+                responseList.add(versionData);
+            }
+            return responseList;
         }
         return null;
     }

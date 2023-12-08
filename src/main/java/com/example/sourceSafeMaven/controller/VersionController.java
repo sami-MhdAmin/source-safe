@@ -1,7 +1,6 @@
 package com.example.sourceSafeMaven.controller;
 
 import com.example.sourceSafeMaven.dto.file.AddFileDto;
-import com.example.sourceSafeMaven.entities.Version;
 import com.example.sourceSafeMaven.repository.TextFileRepository;
 import com.example.sourceSafeMaven.security.JwtService;
 import com.example.sourceSafeMaven.service.TextFileService;
@@ -74,10 +73,17 @@ public class VersionController {
     }
 
     @GetMapping("/fileVersions/{fileId}")
-    public ResponseEntity<List<Version>> fileVersions(@RequestHeader HttpHeaders httpHeaders, @PathVariable Long fileId) throws FileNotFoundException {
+    public ResponseEntity<?> fileVersions(@RequestHeader HttpHeaders httpHeaders, @PathVariable Long fileId) throws FileNotFoundException {
         Long userId = jwtService.getUserIdByToken(httpHeaders);
-        List<Version> versions = versionService.fileVersions(userId,fileId);
-        return  ResponseEntity.status(HttpStatus.OK).body(versions);
+        List<Map<String, Object>> versions = versionService.fileVersions(userId,fileId);
+        if(versions!=null) {
+            return ResponseEntity.status(HttpStatus.OK).body(versions);
+        }
+        else
+        {
+            return  ResponseEntity.status(HttpStatus.FORBIDDEN).body("You don't have the authorization to access the file's versions");
+
+        }
     }
 
 }
