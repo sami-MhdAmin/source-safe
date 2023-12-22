@@ -69,17 +69,14 @@ public class GroupController {
     public ResponseEntity<GroupResponse> addUser(@RequestHeader HttpHeaders httpHeaders, @RequestBody GroupUsersRequest groupUsersRequest) {
         Long currentUserId = jwtService.getUserIdByToken(httpHeaders);
         var currentUser = userService.findUserById(currentUserId);
-        if (currentUser.getRole() != Role.ADMIN)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        else {
-            List<User> users = userService.findUsersByIds(groupUsersRequest.getUsersId());
-            var group = groupService.getGroupById(groupUsersRequest.getGroupId());
-            // get the old users and add the new users to them.
-            group.getUsers().addAll(users);
-            Group updatedGroup = groupService.updateGroup(group);
-            var groupResponse = new GroupResponse(updatedGroup);
-            return ResponseEntity.status(HttpStatus.OK).body(groupResponse);
-        }
+        List<User> users = userService.findUsersByIds(groupUsersRequest.getUsersId());
+        var group = groupService.getGroupById(groupUsersRequest.getGroupId());
+        // get the old users and add the new users to them.
+        group.getUsers().addAll(users);
+        Group updatedGroup = groupService.updateGroup(group);
+        var groupResponse = new GroupResponse(updatedGroup);
+        return ResponseEntity.status(HttpStatus.OK).body(groupResponse);
+
     }
 
     @PostMapping("/change_name/{groupId}")
@@ -93,8 +90,8 @@ public class GroupController {
     }
 
     @PostMapping("/add")
-    public ResponseModel<Group> addGroup(@RequestHeader HttpHeaders httpHeaders, @RequestBody AddGroupRequest name){
+    public ResponseModel<Group> addGroup(@RequestHeader HttpHeaders httpHeaders, @RequestBody AddGroupRequest name) {
         Group group = groupService.addGroup(name);
-        return new ResponseModel<>(HttpStatus.OK.value(),"group added successfully",group);
+        return new ResponseModel<>(HttpStatus.OK.value(), "group added successfully", group);
     }
 }
