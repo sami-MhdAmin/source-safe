@@ -2,6 +2,7 @@ package com.example.sourceSafeMaven.service;
 
 import com.example.sourceSafeMaven.dto.group.AddGroupRequest;
 import com.example.sourceSafeMaven.entities.Group;
+import com.example.sourceSafeMaven.entities.User;
 import com.example.sourceSafeMaven.repository.GroupRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class GroupService {
 
     public List<Group> getGroups() {
         return groupRepository.findAll();
+    }
+    public List<Group> getGroupNotMember(User user) {
+        return groupRepository.findByUsersNotContaining(user);
     }
 
     @Transactional

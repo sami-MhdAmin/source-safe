@@ -37,6 +37,14 @@ public class GroupController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/getGroupNotMember")
+    public List<Group> getGroupNotMember(@RequestHeader HttpHeaders httpHeaders) {
+        Long currentUserId = jwtService.getUserIdByToken(httpHeaders);
+        var currentUser = userService.findUserById(currentUserId);
+        List<Group> groups = groupService.getGroupNotMember(currentUser);
+        return groups;
+    }
+
     @GetMapping()
     public List<MiniGroupResponse> getGroups(@RequestHeader HttpHeaders httpHeaders) {
         List<Group> groups = groupService.getGroups();
