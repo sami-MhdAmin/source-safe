@@ -24,6 +24,11 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+
+    public List<User> getUsersNotMemberInGroup(Group group) {
+        return userRepository.findByGroupsNotContaining(group);
+    }
+
     public List<User> findUsersByIds(List<Long> ids) {
         return userRepository.findUsersByIdIn(ids);
     }

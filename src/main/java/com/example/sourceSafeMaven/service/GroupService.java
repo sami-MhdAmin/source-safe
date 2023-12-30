@@ -27,6 +27,7 @@ public class GroupService {
         return groupRepository.findByUsersNotContaining(user);
     }
 
+
     @Transactional
     public Group updateGroup(Group group) {
         return groupRepository.saveAndFlush(group);

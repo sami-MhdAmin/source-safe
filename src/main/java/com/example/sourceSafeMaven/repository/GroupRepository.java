@@ -10,5 +10,6 @@ public interface GroupRepository extends JpaRepository<Group,Long> {
 
     boolean existsByIdAndUsersId(Long groupId, Long userId);
     List<Group> findByUsersNotContaining(User user);
+
     List<Group> findAll();
 }

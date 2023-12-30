@@ -41,6 +41,7 @@ public class TextFileService {
         for (Group group : groups) {
             Map<String, Object> groupData = new HashMap<>();
             groupData.put("id", group.getId());
+            groupData.put("name", group.getName());
 
             List<Map<String, Object>> fileList = new ArrayList<>();
             List<TextFile> files = group.getTextFiles();

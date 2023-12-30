@@ -45,6 +45,13 @@ public class GroupController {
         return groups;
     }
 
+    @GetMapping("/getUsersNotMemberInGroup/{groupId}")
+    public List<User> getUsersNotMemberInGroup(@RequestHeader HttpHeaders httpHeaders,@PathVariable Long groupId) {
+        Group group=groupService.getGroupById(groupId);
+        List<User> users = userService.getUsersNotMemberInGroup(group);
+        return users;
+    }
+
     @GetMapping()
     public List<MiniGroupResponse> getGroups(@RequestHeader HttpHeaders httpHeaders) {
         List<Group> groups = groupService.getGroups();
