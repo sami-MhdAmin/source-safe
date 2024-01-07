@@ -30,7 +30,7 @@ public class ReservationHistory {
 
     @ManyToOne
     @JoinColumn(name = "reserved_user_id")
-    @JsonIgnore
+//    @JsonIgnore
     private User user;
 
     @Enumerated(EnumType.STRING)
