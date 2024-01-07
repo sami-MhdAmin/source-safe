@@ -56,14 +56,8 @@ public class TextFileController {
     @GetMapping("/historyOfFile/{fileId}")
     public ResponseEntity<?> historyOfFile(@RequestHeader HttpHeaders headers,@PathVariable Long fileId ) {
         Long userId = jwtService.getUserIdByToken(headers);
-        List<ReservationHistory> reservationHistories=reservationHistoryService.historyOfFile(fileId);
-        if(reservationHistories!=null) {
-            return ResponseEntity.status(HttpStatus.OK).body(reservationHistories);
-        }
-        else
-        {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The File does not have any Check Ins");
 
-        }
+        return reservationHistoryService.historyOfFile(fileId,userId);
+
     }
 }

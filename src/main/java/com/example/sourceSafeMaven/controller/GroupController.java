@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -95,6 +96,21 @@ public class GroupController {
 
     }
 
+    @PostMapping("/join_group")
+    public ResponseEntity<GroupResponse> joinGroup(@RequestHeader HttpHeaders httpHeaders, @RequestBody GroupUsersRequest groupUsersRequest) {
+        Long currentUserId = jwtService.getUserIdByToken(httpHeaders);
+        var currentUser = userService.findUserById(currentUserId);
+        List<Long> id=new ArrayList<>();
+        id.add(currentUserId);
+        List<User> users = userService.findUsersByIds(id);
+        var group = groupService.getGroupById(groupUsersRequest.getGroupId());
+        // get the old users and add the new users to them.
+        group.getUsers().addAll(users);
+        Group updatedGroup = groupService.updateGroup(group);
+        var groupResponse = new GroupResponse(updatedGroup);
+        return ResponseEntity.status(HttpStatus.OK).body(groupResponse);
+
+    }
     @PostMapping("/change_name/{groupId}")
     public ResponseEntity<GroupResponse> addUser(@RequestHeader HttpHeaders httpHeaders, @PathVariable Long groupId, @RequestBody String name) {
         var group = groupService.getGroupById(groupId);

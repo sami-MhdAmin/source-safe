@@ -3,10 +3,7 @@ package com.example.sourceSafeMaven.service;
 import com.example.sourceSafeMaven.entities.*;
 import com.example.sourceSafeMaven.entities.enums.CheckOutStatus;
 import com.example.sourceSafeMaven.entities.enums.ReservationStatus;
-import com.example.sourceSafeMaven.repository.ReservationHistoryRepository;
-import com.example.sourceSafeMaven.repository.TextFileRepository;
-import com.example.sourceSafeMaven.repository.UserRepository;
-import com.example.sourceSafeMaven.repository.VersionRepository;
+import com.example.sourceSafeMaven.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +29,8 @@ public class TextFileService {
     @Autowired
     private ReservationHistoryRepository reservationHistoryRepository;
 
+    @Autowired
+    GroupRepository groupRepository;
     public Map<String, Object> getFiles(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
         Set<Group> groups = user.getGroups();
@@ -79,11 +78,20 @@ public class TextFileService {
 
         for (Long fileId : fileIds) {
             TextFile file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("File not found"));
-
-            if (!file.getReservationStatus().equals(ReservationStatus.FREE)) {
-                allFilesFree = false;
-                break;
+            Group group = file.getGroup();
+            if (groupRepository.existsByIdAndUsersId(group.getId(), userId)) {
+                if (!file.getReservationStatus().equals(ReservationStatus.FREE)) {
+                    allFilesFree = false;
+                    break;
+                }
             }
+            else
+            {
+                allFilesFree = false;
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("you haven't access to some or all file");
+
+            }
+
         }
         if (allFilesFree) {
             for (Long fileId : fileIds) {
