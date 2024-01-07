@@ -54,6 +54,7 @@ public class GroupController {
 
     @GetMapping()
     public List<MiniGroupResponse> getGroups(@RequestHeader HttpHeaders httpHeaders) {
+        System.out.println("hi from nginx a portal for servers");
         List<Group> groups = groupService.getGroups();
         List<MiniGroupResponse> groupsResponse = groups.stream().map(group -> new MiniGroupResponse(group)).toList();
         return groupsResponse;
