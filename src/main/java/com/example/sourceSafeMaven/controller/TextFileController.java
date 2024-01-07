@@ -8,6 +8,7 @@ import com.example.sourceSafeMaven.service.TextFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.FileNotFoundException;
@@ -38,7 +39,9 @@ public class TextFileController {
         }
     }
 
-    @PostMapping("/checkOut")
+    @PostMapping(path ="/checkOut",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<String> checkOut(@ModelAttribute CheckOutFileDto request, @RequestHeader HttpHeaders httpHeaders) {
 
         Long userId = jwtService.getUserIdByToken(httpHeaders);
